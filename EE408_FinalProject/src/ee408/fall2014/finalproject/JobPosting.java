@@ -85,6 +85,7 @@ public class JobPosting {
 			System.out.println();
 		}
 	
+		
 	}
 	
 	

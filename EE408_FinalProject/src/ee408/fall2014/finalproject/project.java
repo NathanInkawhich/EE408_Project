@@ -4,6 +4,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -14,6 +18,20 @@ public class project implements ActionListener {
     final static boolean shouldWeightX = true;
     final static boolean RIGHT_TO_LEFT = false;
     
+    JPanel cards;
+    final static String RESUMEPANEL = "RESUME SCREEN";
+	final static String ENGINEERINGPANEL = "ENGINEERING QUESTIONNAIRE";
+	final static String MANUALLABORPANEL = "MANUAL LABOR QUESTIONNAIRE";
+	final static String HEALTHCAREPANEL = "HEALTHCARE QUESTIONNAIRE";
+	final static String BUSINESSPANEL = "BUSINESS QUESTIONNAIRE";
+	
+	ArrayList<JobPosting> jobsList = new ArrayList<JobPosting>();
+	String [] companyNames = {"IBM","Birnie Bus","Emerson's Landscaping"};
+	String [] jobDescriptions = {"We work on computers","We give people rides","We cut grass"};
+	boolean [] jobTimes = {true,true,false};
+	String [] jobTypes = {"Engineering", "Business", "Manual Labor"};
+	ArrayList<Set<String>> keywordList = new ArrayList<Set<String>>();
+	
     JPanel topLevelPanel = new JPanel();
     //For Resume Panel
     JPanel resumePanel;
@@ -33,8 +51,54 @@ public class project implements ActionListener {
     //For Skills Panel
     JPanel skillsPanel;
     JTextArea skillsArea;
+    //Submit panel, with field select
+    JPanel submitPanel;
+    JComboBox areaOfInterestBox;
+    String[] jobCategories = {"Health Care","Engineering","Manual Labor","Business"};
+    JButton submitResumePanelButton;
  
     public void addComponentsToPane(Container pane) {
+    	
+    	
+		//*******************INITIALIZE DATABASE
+		HashSet<String> IBMKeys = new HashSet<String>();
+		IBMKeys.add("computers");
+		IBMKeys.add("mainframes");
+		IBMKeys.add("coffee");
+		HashSet<String> BirnieKeys = new HashSet<String>();
+		BirnieKeys.add("busses");
+		BirnieKeys.add("transportation");
+		BirnieKeys.add("travel");
+		HashSet<String> EmersonKeys = new HashSet<String>();
+		EmersonKeys.add("trees");
+		EmersonKeys.add("grass");
+		EmersonKeys.add("lawnmowers");
+		
+		keywordList.add(IBMKeys);
+		keywordList.add(BirnieKeys);
+		keywordList.add(EmersonKeys);
+		
+		for(int i = 0; i<companyNames.length; i++){
+			JobPosting jp = new JobPosting(companyNames[i],jobDescriptions[i], jobTimes[i], jobTypes[i], keywordList.get(i));
+			jobsList.add(jp);
+		}
+		
+		for(int j = 0; j<jobsList.size();j++){
+			JobPosting temp = jobsList.get(j);
+			System.out.println("**********");
+			System.out.println(temp.getCompanyName());
+			System.out.println(temp.getJobDescription());
+			System.out.println(temp.getFullTime());
+			System.out.println(temp.getJobType());
+			System.out.print("Company Keywords: ");
+			HashSet<String> tempKeys = temp.getKeywords();
+			Iterator<String> itr = tempKeys.iterator();
+			while(itr.hasNext()){
+				System.out.print(itr.next()+" ");
+			}
+			System.out.println();
+		}
+		//************************************END DATABASE
     	
     //Set up resume Panel***********************
     	resumePanel = new JPanel(new GridBagLayout());//Panel to store the resume stuff
@@ -135,64 +199,59 @@ public class project implements ActionListener {
         s.gridy = 3;
         skillsPanel.add(jsp,s);
         topLevelPanel.add(skillsPanel);
+        //For submit panel
+        submitPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints a = new GridBagConstraints();
+        JLabel submitLabel1 = new JLabel("Choose your area of interest:         ");
+        a.fill = GridBagConstraints.VERTICAL;
+        a.weightx = 0.5;
+        a.gridx = 0;
+        a.gridy = 0;
+        submitPanel.add(submitLabel1,a);
+        areaOfInterestBox = new JComboBox(jobCategories);
+        areaOfInterestBox.addActionListener(this);
+        a.fill = GridBagConstraints.VERTICAL;
+        a.weightx = 0.5;
+        a.gridx = 1;
+        a.gridy = 0;
+        submitPanel.add(areaOfInterestBox,a);
+        submitResumePanelButton = new JButton("Submit");
+        submitResumePanelButton.addActionListener(this);
+        a.fill = GridBagConstraints.VERTICAL;
+        a.weightx = 0.5;
+        a.gridx = 0;
+        a.gridy = 1;
+        submitPanel.add(submitResumePanelButton,a);
+        topLevelPanel.add(submitPanel);
+      //End resume Panel***********************
         
-    //Add topLevelPane to the container
-        pane.add(topLevelPanel);
-    /*	
-    if (RIGHT_TO_LEFT) {
-        pane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-    }
- 
-    JButton button;
-    pane.setLayout(new GridBagLayout());
-    GridBagConstraints c = new GridBagConstraints();
-    if (shouldFill) {
-    //natural height, maximum width
-    c.fill = GridBagConstraints.HORIZONTAL;
-    }
- 
-    button = new JButton("Button 1");
-    if (shouldWeightX) {
-    c.weightx = 0.5;
-    }
-    c.fill = GridBagConstraints.HORIZONTAL;
-    c.gridx = 0;
-    c.gridy = 0;
-    pane.add(button, c);
- 
-    button = new JButton("Button 2");
-    c.fill = GridBagConstraints.HORIZONTAL;
-    c.weightx = 0.5;
-    c.gridx = 1;
-    c.gridy = 0;
-    pane.add(button, c);
- 
-    button = new JButton("Button 3");
-    c.fill = GridBagConstraints.HORIZONTAL;
-    c.weightx = 0.5;
-    c.gridx = 2;
-    c.gridy = 0;
-    pane.add(button, c);
- 
-    button = new JButton("Long-Named Button 4");
-    c.fill = GridBagConstraints.HORIZONTAL;
-    c.ipady = 40;      //make this component tall
-    c.weightx = 0.0;
-    c.gridwidth = 3;
-    c.gridx = 0;
-    c.gridy = 1;
-    pane.add(button, c);
- 
-    button = new JButton("5");
-    c.fill = GridBagConstraints.HORIZONTAL;
-    c.ipady = 0;       //reset to default
-    c.weighty = 1.0;   //request any extra vertical space
-    c.anchor = GridBagConstraints.PAGE_END; //bottom of space
-    c.insets = new Insets(10,0,0,0);  //top padding
-    c.gridx = 1;       //aligned with button 2
-    c.gridwidth = 2;   //2 columns wide
-    c.gridy = 2;       //third row
-    pane.add(button, c);*/
+        //Start of card two
+        JPanel engineeringCard = new JPanel();
+        JLabel engineeringLabel1 = new JLabel("This is the ENGINEERING panel");
+        engineeringCard.add(engineeringLabel1);
+      //Start of card three
+        JPanel manualLaborCard = new JPanel();
+        JLabel manualLaborLabel1 = new JLabel("This is the MANUAL LABOR panel");
+        manualLaborCard.add(manualLaborLabel1);
+      //Start of card four
+        JPanel healthCareCard = new JPanel();
+        JLabel healthCareLabel1 = new JLabel("This is the HEALTHCARE panel");
+        healthCareCard.add(healthCareLabel1);
+      //Start of card five
+        JPanel businessCard = new JPanel();
+        JLabel businessLabel1 = new JLabel("This is the BUSINESS panel");
+        businessCard.add(businessLabel1);
+        
+        cards = new JPanel(new CardLayout());
+		cards.add(topLevelPanel,RESUMEPANEL);
+		cards.add(engineeringCard,ENGINEERINGPANEL);
+		cards.add(manualLaborCard,MANUALLABORPANEL);
+		cards.add(healthCareCard,HEALTHCAREPANEL);
+		cards.add(businessCard,BUSINESSPANEL);
+        //Add topLevelPane to the container
+        //pane.add(topLevelPanel);
+		pane.add(cards);
+    
     }
     public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(browseResumeButton)) {
@@ -209,6 +268,25 @@ public class project implements ActionListener {
 	            
 	            resumeField.setText(text);
 	        }
+		}
+		if(e.getSource().equals(submitResumePanelButton)){
+			CardLayout cl = (CardLayout) (cards.getLayout());
+			if(areaOfInterestBox.getSelectedItem().equals("Engineering")){
+			//CardLayout cl = (CardLayout) (cards.getLayout());
+			cl.show(cards, ENGINEERINGPANEL);
+			}
+			if(areaOfInterestBox.getSelectedItem().equals("Manual Labor")){
+				//CardLayout cl = (CardLayout) (cards.getLayout());
+				cl.show(cards, MANUALLABORPANEL);
+				}
+			if(areaOfInterestBox.getSelectedItem().equals("Health Care")){
+				//CardLayout cl = (CardLayout) (cards.getLayout());
+				cl.show(cards, HEALTHCAREPANEL);
+				}
+			if(areaOfInterestBox.getSelectedItem().equals("Business")){
+				//CardLayout cl = (CardLayout) (cards.getLayout());
+				cl.show(cards, BUSINESSPANEL);
+				}
 		}
     }
     /**
