@@ -20,10 +20,13 @@ public class project implements ActionListener {
     
     JPanel cards;
     final static String RESUMEPANEL = "RESUME SCREEN";
-	final static String ENGINEERINGPANEL = "ENGINEERING QUESTIONNAIRE";
-	final static String MANUALLABORPANEL = "MANUAL LABOR QUESTIONNAIRE";
-	final static String HEALTHCAREPANEL = "HEALTHCARE QUESTIONNAIRE";
-	final static String BUSINESSPANEL = "BUSINESS QUESTIONNAIRE";
+    final static String RESULTSPANEL = "RESULTS SCREEN";
+	//final static String ENGINEERINGPANEL = "ENGINEERING QUESTIONNAIRE";
+	//final static String MANUALLABORPANEL = "MANUAL LABOR QUESTIONNAIRE";
+	//final static String HEALTHCAREPANEL = "HEALTHCARE QUESTIONNAIRE";
+	//final static String BUSINESSPANEL = "BUSINESS QUESTIONNAIRE";
+	
+	String resumeFilePath;
 	
 	ArrayList<JobPosting> jobsList = new ArrayList<JobPosting>();
 	String [] companyNames = {"IBM","Birnie Bus","Emerson's Landscaping"};
@@ -56,6 +59,10 @@ public class project implements ActionListener {
     JComboBox areaOfInterestBox;
     String[] jobCategories = {"Health Care","Engineering","Manual Labor","Business"};
     JButton submitResumePanelButton;
+    //For results panel
+    JPanel resultsPanel;
+    JTextField numberOneMatchField;
+    JButton backToResumePanelButton;
  
     public void addComponentsToPane(Container pane) {
     	
@@ -111,7 +118,7 @@ public class project implements ActionListener {
         c.gridy = 0;
         resumePanel.add(resumeLabel, c);
         
-    	resumeField = new JTextField("\t\t\t\t\t");
+    	resumeField = new JTextField(40);
     	resumeField.setEditable(false);
     	c.fill = GridBagConstraints.VERTICAL;
         c.weightx = 0.5;
@@ -157,6 +164,7 @@ public class project implements ActionListener {
         typeOfPositionPanel = new JPanel();
         JLabel positionLabel = new JLabel("What type of Position are you looking for:");
         fullTimeButton = new JRadioButton("Full Time");
+        fullTimeButton.setSelected(true);
         partTimeButton = new JRadioButton("Part Time");
         ButtonGroup group = new ButtonGroup();
         group.add(fullTimeButton);
@@ -215,16 +223,32 @@ public class project implements ActionListener {
         a.gridx = 1;
         a.gridy = 0;
         submitPanel.add(areaOfInterestBox,a);
+        JLabel nullLabel = new JLabel(" ");
+        a.fill = GridBagConstraints.VERTICAL;
+        a.weightx = 0.5;
+        a.gridx = 0;
+        a.gridy = 1;
+        submitPanel.add(nullLabel,a);
         submitResumePanelButton = new JButton("Submit");
         submitResumePanelButton.addActionListener(this);
         a.fill = GridBagConstraints.VERTICAL;
         a.weightx = 0.5;
         a.gridx = 0;
-        a.gridy = 1;
+        a.gridy = 2;
+        a.gridwidth = 2;
         submitPanel.add(submitResumePanelButton,a);
         topLevelPanel.add(submitPanel);
       //End resume Panel***********************
         
+      //FOR RESULTS CARD
+        resultsPanel = new JPanel();
+      
+        numberOneMatchField = new JTextField("NUMBER ONE RESULT GOES HERE", 20);
+        backToResumePanelButton = new JButton("< Back");
+        backToResumePanelButton.addActionListener(this);
+        resultsPanel.add(numberOneMatchField);
+        resultsPanel.add(backToResumePanelButton);
+        /*
         //Start of card two
         JPanel engineeringCard = new JPanel();
         JLabel engineeringLabel1 = new JLabel("This is the ENGINEERING panel");
@@ -241,13 +265,15 @@ public class project implements ActionListener {
         JPanel businessCard = new JPanel();
         JLabel businessLabel1 = new JLabel("This is the BUSINESS panel");
         businessCard.add(businessLabel1);
+        */
         
         cards = new JPanel(new CardLayout());
 		cards.add(topLevelPanel,RESUMEPANEL);
-		cards.add(engineeringCard,ENGINEERINGPANEL);
-		cards.add(manualLaborCard,MANUALLABORPANEL);
-		cards.add(healthCareCard,HEALTHCAREPANEL);
-		cards.add(businessCard,BUSINESSPANEL);
+		cards.add(resultsPanel, RESULTSPANEL);
+		//cards.add(engineeringCard,ENGINEERINGPANEL);
+		//cards.add(manualLaborCard,MANUALLABORPANEL);
+		//cards.add(healthCareCard,HEALTHCAREPANEL);
+		//cards.add(businessCard,BUSINESSPANEL);
         //Add topLevelPane to the container
         //pane.add(topLevelPanel);
 		pane.add(cards);
@@ -257,7 +283,8 @@ public class project implements ActionListener {
 		if (e.getSource().equals(browseResumeButton)) {
 			FileFilter filter = new FileNameExtensionFilter("TextFile", "txt");
 	        JFileChooser chooser = new JFileChooser();
-	        chooser.addChoosableFileFilter(filter);
+	        //chooser.addChoosableFileFilter(filter);
+	        chooser.setFileFilter(filter);
 	        
 	        int returnVal = chooser.showOpenDialog(null);
 	        
@@ -267,10 +294,23 @@ public class project implements ActionListener {
 	            String text = myFile + "";
 	            
 	            resumeField.setText(text);
+	            resumeFilePath = text;
+	            System.out.println("File path to resume: " + resumeFilePath);
 	        }
 		}
 		if(e.getSource().equals(submitResumePanelButton)){
+			
+			//PARSE THE RESUME
+				TextFileParser tfp = new TextFileParser();
+				Set<String> temp = tfp.parseTextFile(resumeFilePath);
+				System.out.println("\n\n*********PARSE THE RESUME***************");
+				System.out.println("These are all of the unique words in the input resume: ");
+				tfp.printSet(temp);
+			//END RESUME PARSING
+			
 			CardLayout cl = (CardLayout) (cards.getLayout());
+			cl.show(cards, RESULTSPANEL);
+			/*
 			if(areaOfInterestBox.getSelectedItem().equals("Engineering")){
 			//CardLayout cl = (CardLayout) (cards.getLayout());
 			cl.show(cards, ENGINEERINGPANEL);
@@ -287,6 +327,11 @@ public class project implements ActionListener {
 				//CardLayout cl = (CardLayout) (cards.getLayout());
 				cl.show(cards, BUSINESSPANEL);
 				}
+				*/
+		}
+		if(e.getSource().equals(backToResumePanelButton)){
+			CardLayout cl = (CardLayout) (cards.getLayout());
+			cl.show(cards, RESUMEPANEL);
 		}
     }
     /**
@@ -296,7 +341,7 @@ public class project implements ActionListener {
      */
     private static void createAndShowGUI() {
         //Create and set up the window.
-        JFrame frame = new JFrame("GridBagLayoutDemo");
+        JFrame frame = new JFrame("Job Finder");
         frame.setPreferredSize(new Dimension(600, 600));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         project p = new project();
