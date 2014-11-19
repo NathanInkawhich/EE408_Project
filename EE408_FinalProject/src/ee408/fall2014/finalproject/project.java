@@ -21,6 +21,7 @@ public class project implements ActionListener {
     JPanel cards;
     final static String RESUMEPANEL = "RESUME SCREEN";
     final static String RESULTSPANEL = "RESULTS SCREEN";
+    final static String INFOPANEL = "INFO SCREEN";
 	//final static String ENGINEERINGPANEL = "ENGINEERING QUESTIONNAIRE";
 	//final static String MANUALLABORPANEL = "MANUAL LABOR QUESTIONNAIRE";
 	//final static String HEALTHCAREPANEL = "HEALTHCARE QUESTIONNAIRE";
@@ -64,6 +65,36 @@ public class project implements ActionListener {
     JTextField numberOneMatchField;
     JButton backToResumePanelButton;
  
+    // Info page stuff
+	private String fullName;
+	private String DOB;
+	private String email;
+	private String phoneNumber;
+	
+	JPanel infoPanel;
+	
+	JTextField firstName;
+	JTextField middleName;
+	JTextField lastName;
+
+	JTextField emailField;
+	JTextField phoneNumberField;
+	
+	JComboBox<String> dayDOB;
+	JComboBox<String> monthDOB;
+	JComboBox<String> yearDOB;
+
+	JButton submit;
+	
+	String first;
+	String middle;
+	String last;
+	String day;
+	String month;
+	String year;
+    // End of Info page stuff
+    
+    
     public void addComponentsToPane(Container pane) {
     	
     	
@@ -107,9 +138,216 @@ public class project implements ActionListener {
 		}
 		//************************************END DATABASE
     	
+		//FOR INFO PANEL&&&&&&&&&&&&&&&&&&
+		String[] days = {
+				"1",
+				"2",
+				"3",
+				"4",
+				"5",
+				"6",
+				"7",
+				"8",
+				"9",
+				"10",
+				"11",
+				"12",
+				"13",
+				"14",
+				"15",
+				"16",
+				"17",
+				"18",
+				"19",
+				"20",
+				"21",
+				"22",
+				"23",
+				"24",
+				"25",
+				"26",
+				"27",
+				"28",
+				"29",
+				"30",
+				"31"
+		};
+		String[] months = {
+				"January",
+				"February",
+				"March",
+				"April",
+				"May",
+				"June",
+				"July",
+				"August",
+				"September",
+				"October",
+				"November",
+				"December"
+		};
+		String[] years = {
+				"2014",
+				"2013",
+				"2012",
+				"2011",
+				"2010",
+				"2009",
+				"2008",
+				"2007",
+				"2006",
+				"2005",
+				"2004",
+				"2003",
+				"2002",
+				"2001",
+				"2000",
+				"1999",
+				"1998",
+				"1997",
+				"1996",
+				"1995",
+				"1994",
+				"1993",
+				"1992",
+				"1991",
+				"1990",
+				"1989",
+				"1988",
+				"1987",
+				"1986",
+				"1985",
+				"1984",
+				"1983",
+				"1982",
+				"1981",
+				"1980"
+				// Come back here and add more years if needed
+		};
+		
+		infoPanel = new JPanel(new GridBagLayout());
+		submit = new JButton("Submit");
+		submit.addActionListener(this);
+		firstName = new JTextField("", 10);
+		lastName = new JTextField("", 10);
+		middleName = new JTextField("", 10);
+		dayDOB = new JComboBox<String>(days);
+		monthDOB = new JComboBox<String>(months);
+		yearDOB = new JComboBox<String>(years);
+		emailField = new JTextField("", 10);
+		phoneNumberField = new JTextField("", 10);
+		
+		
+		GridBagConstraints c = new GridBagConstraints();
+		
+		JLabel firstNameLabel = new JLabel("First Name: ");
+		JLabel lastNameLabel = new JLabel("Last Name: ");
+		JLabel middleNameLabel = new JLabel("Middle Name: ");
+		JLabel dateOfBirth = new JLabel("Date of Birth");
+		JLabel dayDOBLabel = new JLabel("Day: ");
+		JLabel monthDOBLabel = new JLabel("Month: ");
+		JLabel yearDOBLabel = new JLabel("Year: ");
+		JLabel emailLabel = new JLabel("Email: ");
+		JLabel phoneLabel = new JLabel("Phone Number: ");
+		
+		// Beginning of Info Panel
+		c.weightx = 0.5;
+		c.gridwidth = 1;
+		c.gridx = 0;
+		c.gridy = 1;
+		infoPanel.add(firstNameLabel, c);
+		
+		c.weightx = 0.5;
+		c.gridx = 1;
+		c.gridy = 1;
+		infoPanel.add(firstName, c);
+		
+		c.weightx = 0.5;
+		c.gridx = 0;
+		c.gridy = 2;
+		infoPanel.add(middleNameLabel, c);
+		
+		c.weightx = 0.5;
+		c.gridx = 1;
+		c.gridy = 2;
+		infoPanel.add(middleName, c);
+		
+		c.weightx = 0.5;
+		c.gridx = 0;
+		c.gridy = 3;
+		infoPanel.add(lastNameLabel, c);
+		
+		c.weightx = 0.5;
+		c.gridx = 1;
+		c.gridy = 3;
+		infoPanel.add(lastName, c);
+		
+		c.weightx = 0.5;
+		c.gridx = 0;
+		c.gridy = 4;
+		infoPanel.add(dateOfBirth, c);
+		
+		c.weightx = 0.5;
+		c.gridx = 0;
+		c.gridy = 5;
+		infoPanel.add(dayDOBLabel, c);
+		
+		c.weightx = 0.5;
+		c.gridx = 1;
+		c.gridy = 5;
+		infoPanel.add(dayDOB, c);
+		
+		c.weightx = 0.5;
+		c.gridx = 0;
+		c.gridy = 6;
+		infoPanel.add(monthDOBLabel, c);
+		
+		c.weightx = 0.5;
+		c.gridx = 1;
+		c.gridy = 6;
+		infoPanel.add(monthDOB, c);
+		
+		c.weightx = 0.5;
+		c.gridx = 0;
+		c.gridy = 7;
+		infoPanel.add(yearDOBLabel, c);
+		
+		c.weightx = 0.5;
+		c.gridx = 1;
+		c.gridy = 7;
+		infoPanel.add(yearDOB, c);
+		
+		c.weightx = 0.5;
+		c.gridx = 0;
+		c.gridy = 8;
+		infoPanel.add(emailLabel, c);
+		
+		c.weightx = 0.5;
+		c.gridx = 1;
+		c.gridy = 8;
+		infoPanel.add(emailField, c);
+		
+		c.weightx = 0.5;
+		c.gridx = 0;
+		c.gridy = 9;
+		infoPanel.add(phoneLabel, c);
+		
+		c.weightx = 0.5;
+		c.gridx = 1;
+		c.gridy = 9;
+		infoPanel.add(phoneNumberField, c);
+		
+		c.weightx = 0.5;
+		c.gridx = 2;
+		c.gridy = 10;
+		infoPanel.add(submit, c);
+		
+		//END INFO PANEL%%%%%%%%%%%%%%%%%%%
+		
+		
     //Set up resume Panel***********************
     	resumePanel = new JPanel(new GridBagLayout());//Panel to store the resume stuff
-    	GridBagConstraints c = new GridBagConstraints();
+    	c = new GridBagConstraints();
     	//resumePanel.setPreferredSize(new Dimension(100,100));
     	JLabel resumeLabel= new JLabel("Upload your resume here:");
     	c.fill = GridBagConstraints.VERTICAL;
@@ -268,6 +506,7 @@ public class project implements ActionListener {
         */
         
         cards = new JPanel(new CardLayout());
+        cards.add(infoPanel,INFOPANEL);
 		cards.add(topLevelPanel,RESUMEPANEL);
 		cards.add(resultsPanel, RESULTSPANEL);
 		//cards.add(engineeringCard,ENGINEERINGPANEL);
@@ -330,6 +569,10 @@ public class project implements ActionListener {
 				*/
 		}
 		if(e.getSource().equals(backToResumePanelButton)){
+			CardLayout cl = (CardLayout) (cards.getLayout());
+			cl.show(cards, RESUMEPANEL);
+		}
+		if(e.getSource().equals(submit)){
 			CardLayout cl = (CardLayout) (cards.getLayout());
 			cl.show(cards, RESUMEPANEL);
 		}

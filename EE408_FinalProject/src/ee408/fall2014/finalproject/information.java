@@ -273,6 +273,9 @@ public class information {
 			 this.DOB = this.day + this.month + this.year;
 			 this.email = emailField.getText();
 			 this.phoneNumber = phoneNumberField.getText();
+			 
+			 // Go to Nate's Professional Experiences/Skills page
+			 
 		}
 		
 		System.out.println(getFullName());
