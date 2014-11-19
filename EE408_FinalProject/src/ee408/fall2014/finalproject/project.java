@@ -573,10 +573,21 @@ public class project implements ActionListener {
 			cl.show(cards, RESUMEPANEL);
 		}
 		if(e.getSource().equals(submit)){
+			 this.first = firstName.getText();
+			 this.middle = middleName.getText();
+			 this.last = lastName.getText();
+			 this.fullName = this.first + this.middle + this.last;
+			 this.day = (String) dayDOB.getSelectedItem();
+			 this.month = (String) monthDOB.getSelectedItem();
+			 this.year =  (String) yearDOB.getSelectedItem();
+			 this.DOB = this.day + this.month + this.year;
+			 this.email = emailField.getText();
+			 this.phoneNumber = phoneNumberField.getText();
 			CardLayout cl = (CardLayout) (cards.getLayout());
 			cl.show(cards, RESUMEPANEL);
 		}
     }
+   
     /**
      * Create the GUI and show it.  For thread safety,
      * this method should be invoked from the
