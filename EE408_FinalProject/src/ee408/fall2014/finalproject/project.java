@@ -22,19 +22,15 @@ public class project implements ActionListener {
     final static String RESUMEPANEL = "RESUME SCREEN";
     final static String RESULTSPANEL = "RESULTS SCREEN";
     final static String INFOPANEL = "INFO SCREEN";
-	//final static String ENGINEERINGPANEL = "ENGINEERING QUESTIONNAIRE";
-	//final static String MANUALLABORPANEL = "MANUAL LABOR QUESTIONNAIRE";
-	//final static String HEALTHCAREPANEL = "HEALTHCARE QUESTIONNAIRE";
-	//final static String BUSINESSPANEL = "BUSINESS QUESTIONNAIRE";
 	
 	String resumeFilePath;
 	
 	ArrayList<JobPosting> jobsList = new ArrayList<JobPosting>();
-	String [] companyNames = {"IBM","Birnie Bus","Emerson's Landscaping"};
-	String [] jobDescriptions = {"We work on computers","We give people rides","We cut grass"};
-	boolean [] jobTimes = {true,true,false};
-	String [] jobTypes = {"Engineering", "Business", "Manual Labor"};
-	ArrayList<Set<String>> keywordList = new ArrayList<Set<String>>();
+	String [] companyNames = {"IBM","Birnie Bus","Emerson's Landscaping", "Boeing", "Google"};
+	String [] jobDescriptions = {"We work on computers","We give people rides","We cut grass", "We fly planes", "We are the internet"};
+	boolean [] jobTimes = {true,true,false, true, true};
+	String [] jobTypes = {"Engineering", "Business", "Manual Labor", "Engineering", "Engineering"};
+	ArrayList< Set<String> > keywordList = new ArrayList<Set<String>>();
 	
     JPanel topLevelPanel = new JPanel();
     //For Resume Panel
@@ -94,27 +90,44 @@ public class project implements ActionListener {
 	String year;
     // End of Info page stuff
     
-    
+	 User currentUser;//This represents the user who is filling out the application
+	 
     public void addComponentsToPane(Container pane) {
     	
     	
 		//*******************INITIALIZE DATABASE
 		HashSet<String> IBMKeys = new HashSet<String>();
+		IBMKeys.add("IBM");
 		IBMKeys.add("computers");
 		IBMKeys.add("mainframes");
 		IBMKeys.add("coffee");
 		HashSet<String> BirnieKeys = new HashSet<String>();
+		BirnieKeys.add("Birnie Bus");
 		BirnieKeys.add("busses");
 		BirnieKeys.add("transportation");
 		BirnieKeys.add("travel");
 		HashSet<String> EmersonKeys = new HashSet<String>();
+		EmersonKeys.add("Emerson's Landscaping");
 		EmersonKeys.add("trees");
 		EmersonKeys.add("grass");
 		EmersonKeys.add("lawnmowers");
+		HashSet<String> BoeingKeys = new HashSet<String>();
+		BoeingKeys.add("Boeing");
+		BoeingKeys.add("airplane");
+		BoeingKeys.add("flying");
+		BoeingKeys.add("computers");
+		HashSet<String> GoogleKeys = new HashSet<String>();
+		GoogleKeys.add("Google");
+		GoogleKeys.add("computers");
+		GoogleKeys.add("java");
+		GoogleKeys.add("program");
+		GoogleKeys.add("C++");
 		
 		keywordList.add(IBMKeys);
 		keywordList.add(BirnieKeys);
 		keywordList.add(EmersonKeys);
+		keywordList.add(BoeingKeys);
+		keywordList.add(GoogleKeys);
 		
 		for(int i = 0; i<companyNames.length; i++){
 			JobPosting jp = new JobPosting(companyNames[i],jobDescriptions[i], jobTimes[i], jobTypes[i], keywordList.get(i));
@@ -486,39 +499,18 @@ public class project implements ActionListener {
         backToResumePanelButton.addActionListener(this);
         resultsPanel.add(numberOneMatchField);
         resultsPanel.add(backToResumePanelButton);
-        /*
-        //Start of card two
-        JPanel engineeringCard = new JPanel();
-        JLabel engineeringLabel1 = new JLabel("This is the ENGINEERING panel");
-        engineeringCard.add(engineeringLabel1);
-      //Start of card three
-        JPanel manualLaborCard = new JPanel();
-        JLabel manualLaborLabel1 = new JLabel("This is the MANUAL LABOR panel");
-        manualLaborCard.add(manualLaborLabel1);
-      //Start of card four
-        JPanel healthCareCard = new JPanel();
-        JLabel healthCareLabel1 = new JLabel("This is the HEALTHCARE panel");
-        healthCareCard.add(healthCareLabel1);
-      //Start of card five
-        JPanel businessCard = new JPanel();
-        JLabel businessLabel1 = new JLabel("This is the BUSINESS panel");
-        businessCard.add(businessLabel1);
-        */
         
         cards = new JPanel(new CardLayout());
         cards.add(infoPanel,INFOPANEL);
 		cards.add(topLevelPanel,RESUMEPANEL);
 		cards.add(resultsPanel, RESULTSPANEL);
-		//cards.add(engineeringCard,ENGINEERINGPANEL);
-		//cards.add(manualLaborCard,MANUALLABORPANEL);
-		//cards.add(healthCareCard,HEALTHCAREPANEL);
-		//cards.add(businessCard,BUSINESSPANEL);
-        //Add topLevelPane to the container
-        //pane.add(topLevelPanel);
+	
 		pane.add(cards);
     
     }
     public void actionPerformed(ActionEvent e) {
+    
+    //###############
 		if (e.getSource().equals(browseResumeButton)) {
 			FileFilter filter = new FileNameExtensionFilter("TextFile", "txt");
 	        JFileChooser chooser = new JFileChooser();
@@ -537,42 +529,41 @@ public class project implements ActionListener {
 	            System.out.println("File path to resume: " + resumeFilePath);
 	        }
 		}
+	//###############	
 		if(e.getSource().equals(submitResumePanelButton)){
 			
 			//PARSE THE RESUME
 				TextFileParser tfp = new TextFileParser();
 				Set<String> temp = tfp.parseTextFile(resumeFilePath);
-				System.out.println("\n\n*********PARSE THE RESUME***************");
-				System.out.println("These are all of the unique words in the input resume: ");
-				tfp.printSet(temp);
+				
+				currentUser.setUserKeywords( temp );
+				currentUser.setAreaOfInterest( (String)areaOfInterestBox.getSelectedItem() );
+				currentUser.setFullTime( fullTimeButton.isSelected() );
+				currentUser.setLevelOfEducation( (String)levelOfEducationBox.getSelectedItem() );
+				
+				currentUser.printUserInfo();
+				Scoring score = new Scoring();
+				ArrayList<JobPosting> sortedJobs = score.findBestMatches(currentUser, jobsList);
+				//System.out.println("\n\n*********PARSE THE RESUME***************");
+				//System.out.println("These are all of the unique words in the input resume: ");
+				//tfp.printSet(temp);
 			//END RESUME PARSING
 			
 			CardLayout cl = (CardLayout) (cards.getLayout());
 			cl.show(cards, RESULTSPANEL);
-			/*
-			if(areaOfInterestBox.getSelectedItem().equals("Engineering")){
-			//CardLayout cl = (CardLayout) (cards.getLayout());
-			cl.show(cards, ENGINEERINGPANEL);
-			}
-			if(areaOfInterestBox.getSelectedItem().equals("Manual Labor")){
-				//CardLayout cl = (CardLayout) (cards.getLayout());
-				cl.show(cards, MANUALLABORPANEL);
-				}
-			if(areaOfInterestBox.getSelectedItem().equals("Health Care")){
-				//CardLayout cl = (CardLayout) (cards.getLayout());
-				cl.show(cards, HEALTHCAREPANEL);
-				}
-			if(areaOfInterestBox.getSelectedItem().equals("Business")){
-				//CardLayout cl = (CardLayout) (cards.getLayout());
-				cl.show(cards, BUSINESSPANEL);
-				}
-				*/
+			
 		}
+	//###############	
 		if(e.getSource().equals(backToResumePanelButton)){
 			CardLayout cl = (CardLayout) (cards.getLayout());
 			cl.show(cards, RESUMEPANEL);
 		}
-		if(e.getSource().equals(submit)){
+	//###############
+		if(e.getSource().equals(submit)){//information panel submit button
+			
+			currentUser = new User();//Initialize user object here because this is the first stage in the application process
+			
+			//I DONT THINK THESE VARIABLES NEED GLOBAL SCOPE!!!!!!!!!!!!!
 			 this.first = firstName.getText();
 			 this.middle = middleName.getText();
 			 this.last = lastName.getText();
@@ -583,6 +574,9 @@ public class project implements ActionListener {
 			 this.DOB = this.day + this.month + this.year;
 			 this.email = emailField.getText();
 			 this.phoneNumber = phoneNumberField.getText();
+			 
+			 currentUser.setFullName(first+ " " + middle + " " + last);
+			 
 			CardLayout cl = (CardLayout) (cards.getLayout());
 			cl.show(cards, RESUMEPANEL);
 		}
