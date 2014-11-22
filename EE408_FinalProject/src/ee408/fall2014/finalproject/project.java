@@ -28,9 +28,12 @@ public class project implements ActionListener {
 	ArrayList<JobPosting> jobsList = new ArrayList<JobPosting>();
 	String [] companyNames = {"IBM","Birnie Bus","Emerson's Landscaping", "Boeing", "Google"};
 	String [] jobDescriptions = {"We work on computers","We give people rides","We cut grass", "We fly planes", "We are the internet"};
+	String [] jobURL = { "HTTP:// Google.com/"};
 	boolean [] jobTimes = {true,true,false, true, true};
 	String [] jobTypes = {"Engineering", "Business", "Manual Labor", "Engineering", "Engineering"};
 	ArrayList< Set<String> > keywordList = new ArrayList<Set<String>>();
+	
+	ArrayList<JobPosting> sortedJobs = new ArrayList();
 	
     JPanel topLevelPanel = new JPanel();
     //For Resume Panel
@@ -58,7 +61,7 @@ public class project implements ActionListener {
     JButton submitResumePanelButton;
     //For results panel
     JPanel resultsPanel;
-    JTextField numberOneMatchField;
+    JLabel numberOneMatchField;
     JButton backToResumePanelButton;
  
     // Info page stuff
@@ -492,13 +495,8 @@ public class project implements ActionListener {
       //End resume Panel***********************
         
       //FOR RESULTS CARD
-        resultsPanel = new JPanel();
-      
-        numberOneMatchField = new JTextField("NUMBER ONE RESULT GOES HERE", 20);
-        backToResumePanelButton = new JButton("< Back");
-        backToResumePanelButton.addActionListener(this);
-        resultsPanel.add(numberOneMatchField);
-        resultsPanel.add(backToResumePanelButton);
+        resultsPanel = new JPanel(new GridBagLayout());
+        
         
         cards = new JPanel(new CardLayout());
         cards.add(infoPanel,INFOPANEL);
@@ -542,15 +540,81 @@ public class project implements ActionListener {
 				currentUser.setLevelOfEducation( (String)levelOfEducationBox.getSelectedItem() );
 				
 				currentUser.printUserInfo();
-				Scoring score = new Scoring();
-				ArrayList<JobPosting> sortedJobs = score.findBestMatches(currentUser, jobsList);
 				//System.out.println("\n\n*********PARSE THE RESUME***************");
 				//System.out.println("These are all of the unique words in the input resume: ");
 				//tfp.printSet(temp);
 			//END RESUME PARSING
+				
+				Scoring score = new Scoring();
+				sortedJobs = score.findBestMatches(currentUser, jobsList, jobURL);
+
+		        
+		        numberOneMatchField = new JLabel(sortedJobs.get(0).getCompanyName());
+		        numberOneMatchField.setSize(1, 1);
+		        GridBagConstraints s = new GridBagConstraints();
+		        s.fill = GridBagConstraints.VERTICAL;
+		        s.weightx = 0.5;
+		        s.weighty = .5;
+		        s.gridx = 0;
+		        s.gridy = 0;
+		        
+		        resultsPanel.add(numberOneMatchField,s);
+		        
+		        JLabel numberOneDescription = new JLabel(sortedJobs.get(0).getURL());
+		        s.weightx = 0.5;
+		        s.gridx = 1;
+		        s.gridy = 0;		        
+		        
+		        resultsPanel.add(numberOneDescription,s);
+		        
+		        JLabel numberTwoMatchField = new JLabel(sortedJobs.get(1).getCompanyName());
+		        numberOneMatchField.setSize(1, 1);
+
+		        s.fill = GridBagConstraints.VERTICAL;
+		        s.weightx = 0.5;
+		        s.weighty = .5;
+		        s.gridx = 0;
+		        s.gridy = 1;
+		        
+		        resultsPanel.add(numberTwoMatchField,s);
+		        
+		        JLabel numberTwoDescription = new JLabel(sortedJobs.get(1).getJobDescription());
+		        s.weightx = 0.5;
+		        s.gridx = 1;
+		        s.gridy = 1;		        
+		        
+		        resultsPanel.add(numberTwoDescription,s);
+		        
+		        JLabel numberThreeMatchField = new JLabel(sortedJobs.get(2).getCompanyName());
+		        numberOneMatchField.setSize(1, 1);
+
+		        s.fill = GridBagConstraints.VERTICAL;
+		        s.weightx = 0.5;
+		        s.weighty = .5;
+		        s.gridx = 0;
+		        s.gridy = 2;
+		        
+		        resultsPanel.add(numberThreeMatchField,s);
+		        
+		        JLabel numberThreeDescription = new JLabel(sortedJobs.get(2).getJobDescription());
+		        s.weightx = 0.5;
+		        s.gridx = 1;
+		        s.gridy = 2;		        
+		        
+		        resultsPanel.add(numberThreeDescription,s);
+		        
+		        
+		        backToResumePanelButton = new JButton("< Back");
+		        backToResumePanelButton.addActionListener(this);
+		        s.weightx = 0.5;
+		        s.gridx = 1;
+		        s.gridy = 3;
+		        resultsPanel.add(backToResumePanelButton,s);
 			
 			CardLayout cl = (CardLayout) (cards.getLayout());
 			cl.show(cards, RESULTSPANEL);
+			resultsPanel.repaint();
+			
 			
 		}
 	//###############	

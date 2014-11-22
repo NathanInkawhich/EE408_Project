@@ -9,6 +9,7 @@ public class JobPosting {
 	private boolean fullTime;
 	private String jobType;//Health care, engineering, etc...
 	private Set<String> keywords;
+	private String jobURL;
 	
 	public JobPosting(String companyName, String jobDescription, boolean fullTime, String jobType, Set<String> keys){
 		
@@ -36,6 +37,12 @@ public class JobPosting {
 	}
 	public String getJobType(){
 		return this.jobType;
+	}
+	public void setURL(String URL){
+		this.jobURL = URL;
+	}
+	public String getURL(){
+		return this.jobURL;
 	}
 	
 	public static void main(String[] args){
