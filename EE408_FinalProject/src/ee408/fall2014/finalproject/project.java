@@ -89,7 +89,11 @@ public class project implements ActionListener {
 	String month;
 	String year;
     // End of Info page stuff
+    JButton clearInfoButton;
+	JButton backToInfoButton;
     
+	 User currentUser1;//This represents the user who is filling out the application
+	 
 	 User currentUser;//This represents the user who is filling out the application
 	 
     public void addComponentsToPane(Container pane) {
@@ -263,6 +267,8 @@ public class project implements ActionListener {
 		JLabel emailLabel = new JLabel("Email: ");
 		JLabel phoneLabel = new JLabel("Phone Number: ");
 		
+		clearInfoButton = new JButton("Clear");
+		clearInfoButton.addActionListener(this);
 		// Beginning of Info Panel
 		c.weightx = 0.5;
 		c.gridwidth = 1;
@@ -355,8 +361,16 @@ public class project implements ActionListener {
 		c.gridy = 10;
 		infoPanel.add(submit, c);
 		
+		c.weightx = 0.5;
+		c.gridx = 0;
+		c.gridy = 10;
+		infoPanel.add(clearInfoButton, c);
+		
+		
+		
 		//END INFO PANEL%%%%%%%%%%%%%%%%%%%
 		
+		backToInfoButton = new JButton("< Back");
 		
     //Set up resume Panel***********************
     	resumePanel = new JPanel(new GridBagLayout());//Panel to store the resume stuff
@@ -488,8 +502,16 @@ public class project implements ActionListener {
         a.gridy = 2;
         a.gridwidth = 2;
         submitPanel.add(submitResumePanelButton,a);
+        
+        a.weightx = 0.5;
+        a.gridx = 0;
+        a.gridy = 3;
+        backToInfoButton.addActionListener(this);
+        submitPanel.add(backToInfoButton, a);
+        
         topLevelPanel.add(submitPanel);
       //End resume Panel***********************
+        
         
       //FOR RESULTS CARD
         resultsPanel = new JPanel();
@@ -533,35 +555,73 @@ public class project implements ActionListener {
 		if(e.getSource().equals(submitResumePanelButton)){
 			
 			//PARSE THE RESUME
+			if(resumeFilePath!=null){
 				TextFileParser tfp = new TextFileParser();
 				Set<String> temp = tfp.parseTextFile(resumeFilePath);
 				
-				currentUser.setUserKeywords( temp );
-				currentUser.setAreaOfInterest( (String)areaOfInterestBox.getSelectedItem() );
-				currentUser.setFullTime( fullTimeButton.isSelected() );
-				currentUser.setLevelOfEducation( (String)levelOfEducationBox.getSelectedItem() );
+				currentUser1.setUserKeywords( temp );
+				currentUser1.setAreaOfInterest( (String)areaOfInterestBox.getSelectedItem() );
+				currentUser1.setFullTime( fullTimeButton.isSelected() );
+				currentUser1.setLevelOfEducation( (String)levelOfEducationBox.getSelectedItem() );
 				
-				currentUser.printUserInfo();
+				currentUser1.printUserInfo();
 				Scoring score = new Scoring();
-				ArrayList<JobPosting> sortedJobs = score.findBestMatches(currentUser, jobsList);
+				ArrayList<JobPosting> sortedJobs = score.findBestMatches(currentUser1, jobsList);
 				//System.out.println("\n\n*********PARSE THE RESUME***************");
 				//System.out.println("These are all of the unique words in the input resume: ");
 				//tfp.printSet(temp);
-			//END RESUME PARSING
-			
-			CardLayout cl = (CardLayout) (cards.getLayout());
-			cl.show(cards, RESULTSPANEL);
-			
+				CardLayout cl = (CardLayout) (cards.getLayout());
+				cl.show(cards, RESULTSPANEL);
+			}
+			else {
+//				JFrame frame = new JFrame();
+				System.out.println("No File selected...");
+				JOptionPane.showMessageDialog(null, "No File Selected.");
+				CardLayout cl = (CardLayout) (cards.getLayout());
+				cl.show(cards, RESUMEPANEL);
+			}
 		}
+				
+//				currentUser.setUserKeywords( temp );
+//				currentUser.setAreaOfInterest( (String)areaOfInterestBox.getSelectedItem() );
+//				currentUser.setFullTime( fullTimeButton.isSelected() );
+//				currentUser.setLevelOfEducation( (String)levelOfEducationBox.getSelectedItem() );
+//				
+//				currentUser.printUserInfo();
+//				Scoring score = new Scoring();
+//				ArrayList<JobPosting> sortedJobs = score.findBestMatches(currentUser, jobsList);
+//				//System.out.println("\n\n*********PARSE THE RESUME***************");
+//				//System.out.println("These are all of the unique words in the input resume: ");
+//				//tfp.printSet(temp);
+//			//END RESUME PARSING
+			
+		
 	//###############	
 		if(e.getSource().equals(backToResumePanelButton)){
 			CardLayout cl = (CardLayout) (cards.getLayout());
 			cl.show(cards, RESUMEPANEL);
 		}
 	//###############
+//		if(e.getSource().equals(submit)){//information panel submit button
+//			
+//			currentUser1 = new User();//Initialize user object here because this is the first stage in the application process
+//			
+//			//I DONT THINK THESE VARIABLES NEED GLOBAL SCOPE!!!!!!!!!!!!!
+//			
+//			this.first = firstName.getText();
+//			this.middle = middleName.getText();
+//			this.last = lastName.getText();
+//			this.fullName = this.first + this.middle + this.last;
+//			this.day = (String) dayDOB.getSelectedItem();
+//			this.month = (String) monthDOB.getSelectedItem();
+//			this.year =  (String) yearDOB.getSelectedItem();
+//			this.DOB = this.day + this.month + this.year;
+//			this.email = emailField.getText();
+//			this.phoneNumber = phoneNumberField.getText();
+//	//###############
 		if(e.getSource().equals(submit)){//information panel submit button
 			
-			currentUser = new User();//Initialize user object here because this is the first stage in the application process
+			currentUser1 = new User();//Initialize user object here because this is the first stage in the application process
 			
 			//I DONT THINK THESE VARIABLES NEED GLOBAL SCOPE!!!!!!!!!!!!!
 			 this.first = firstName.getText();
@@ -575,10 +635,23 @@ public class project implements ActionListener {
 			 this.email = emailField.getText();
 			 this.phoneNumber = phoneNumberField.getText();
 			 
-			 currentUser.setFullName(first+ " " + middle + " " + last);
+			 currentUser1.setFullName(first+ " " + middle + " " + last);
 			 
 			CardLayout cl = (CardLayout) (cards.getLayout());
 			cl.show(cards, RESUMEPANEL);
+		}
+		if(e.getSource().equals(backToInfoButton)){
+			CardLayout cl = (CardLayout)(cards.getLayout());
+			cl.show(cards, INFOPANEL);
+		}
+		if(e.getSource().equals(clearInfoButton)){
+			firstName.setText("");
+			middleName.setText("");
+			lastName.setText("");
+			emailField.setText("");
+			phoneNumberField.setText("");
+//			CardLayout cl = (CardLayout)(cards.getLayout());
+//			cl.show(cards, INFOPANEL);
 		}
     }
    
