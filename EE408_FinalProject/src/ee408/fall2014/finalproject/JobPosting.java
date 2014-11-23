@@ -1,5 +1,6 @@
 package ee408.fall2014.finalproject;
 
+import java.net.URI;
 import java.util.*;
 
 public class JobPosting {
@@ -11,13 +12,14 @@ public class JobPosting {
 	private Set<String> keywords;
 	private String jobURL;
 	
-	public JobPosting(String companyName, String jobDescription, boolean fullTime, String jobType, Set<String> keys){
+	public JobPosting(String companyName, String jobDescription, boolean fullTime, String jobType, Set<String> keys,String URL){
 		
 		this.companyName = companyName;
 		this.jobDescription = jobDescription;
 		this.fullTime = fullTime;
 		this.jobType = jobType;
 		keywords = new HashSet<String>(keys);
+		this.jobURL = URL;
 	
 	}
 	public void addKeywords(Set<String> keys){
@@ -52,6 +54,8 @@ public class JobPosting {
 		String [] jobDescriptions = {"We work on computers","We give people rides","We cut grass"};
 		boolean [] jobTimes = {true,true,false};
 		String [] jobTypes = {"Engineering", "Business", "Manual Labor"};
+		String [] jobURL = {"http://google.com","",""};
+		//String []
 		ArrayList<Set<String>> keywordList = new ArrayList<Set<String>>();
 		
 		HashSet<String> IBMKeys = new HashSet<String>();
@@ -66,13 +70,13 @@ public class JobPosting {
 		EmersonKeys.add("trees");
 		EmersonKeys.add("grass");
 		EmersonKeys.add("lawnmowers");
-		
+				
 		keywordList.add(IBMKeys);
 		keywordList.add(BirnieKeys);
 		keywordList.add(EmersonKeys);
 		
 		for(int i = 0; i<companyNames.length; i++){
-			JobPosting jp = new JobPosting(companyNames[i],jobDescriptions[i], jobTimes[i], jobTypes[i], keywordList.get(i));
+			JobPosting jp = new JobPosting(companyNames[i],jobDescriptions[i], jobTimes[i], jobTypes[i], keywordList.get(i),jobURL[i]);
 			jobsList.add(jp);
 		}
 		

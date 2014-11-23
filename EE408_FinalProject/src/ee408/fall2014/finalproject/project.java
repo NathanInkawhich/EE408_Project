@@ -3,7 +3,11 @@ package ee408.fall2014.finalproject;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,8 +31,8 @@ public class project implements ActionListener {
 	
 	ArrayList<JobPosting> jobsList = new ArrayList<JobPosting>();
 	String [] companyNames = {"IBM","Birnie Bus","Emerson's Landscaping", "Boeing", "Google"};
-	String [] jobDescriptions = {"We work on computers","We give people rides","We cut grass", "We fly planes", "We are the internet"};
-	String [] jobURL = { "HTTP:// Google.com/"};
+	String [] jobDescriptions = {" programming skills and a keen eye for quality.","We give people rides","We cut grass", "We fly planes", "We are the internet"};
+	String [] jobURL = {"http://www.ibm.com/us/en/","http://www.birniebus.com/","http://www.willowtreefnl.com/","http://www.boeing.com/boeing/","http://Google.com/"};
 	boolean [] jobTimes = {true,true,false, true, true};
 	String [] jobTypes = {"Engineering", "Business", "Manual Labor", "Engineering", "Engineering"};
 	ArrayList< Set<String> > keywordList = new ArrayList<Set<String>>();
@@ -63,6 +67,12 @@ public class project implements ActionListener {
     JPanel resultsPanel;
     JLabel numberOneMatchField;
     JButton backToResumePanelButton;
+    JButton numberOneURL;
+    JButton numberTwoURL;
+    JButton numberThreeURL;
+    
+
+
  
     // Info page stuff
 	private String fullName;
@@ -132,8 +142,18 @@ public class project implements ActionListener {
 		keywordList.add(BoeingKeys);
 		keywordList.add(GoogleKeys);
 		
+		numberOneURL = new JButton();
+		numberTwoURL = new JButton();
+		numberThreeURL = new JButton();
+		
+	    numberOneURL.addActionListener(this);
+	    numberTwoURL.addActionListener(this);
+	    numberTwoURL.addActionListener(this);
+		
+
+		
 		for(int i = 0; i<companyNames.length; i++){
-			JobPosting jp = new JobPosting(companyNames[i],jobDescriptions[i], jobTimes[i], jobTypes[i], keywordList.get(i));
+			JobPosting jp = new JobPosting(companyNames[i],jobDescriptions[i], jobTimes[i], jobTypes[i], keywordList.get(i), jobURL[i]);
 			jobsList.add(jp);
 		}
 		
@@ -508,6 +528,17 @@ public class project implements ActionListener {
     }
     public void actionPerformed(ActionEvent e) {
     
+    	if(e.getSource().equals(numberTwoURL))
+    	{
+    		String s = sortedJobs.get(0).getURL();
+    		//URL url = new URL(s);
+    		try {
+				java.awt.Desktop.getDesktop().browse(java.net.URI.create(s));
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    	}
     //###############
 		if (e.getSource().equals(browseResumeButton)) {
 			FileFilter filter = new FileNameExtensionFilter("TextFile", "txt");
@@ -546,70 +577,161 @@ public class project implements ActionListener {
 			//END RESUME PARSING
 				
 				Scoring score = new Scoring();
-				sortedJobs = score.findBestMatches(currentUser, jobsList, jobURL);
+				sortedJobs = score.findBestMatches(currentUser, jobsList);
 
 		        
-		        numberOneMatchField = new JLabel(sortedJobs.get(0).getCompanyName());
-		        numberOneMatchField.setSize(1, 1);
+		        numberOneMatchField = new JLabel("Match 1: "+ sortedJobs.get(0).getCompanyName());
+
+		        numberOneMatchField.setFont(new Font("Serif",Font.BOLD,22));
+		        numberOneMatchField.setForeground(Color.RED);
+		        
 		        GridBagConstraints s = new GridBagConstraints();
-		        s.fill = GridBagConstraints.VERTICAL;
-		        s.weightx = 0.5;
-		        s.weighty = .5;
+		        s.fill = GridBagConstraints.BOTH;
 		        s.gridx = 0;
 		        s.gridy = 0;
+		        s.weightx = 1;
+		        s.weighty = 1;
+		        s.insets = new Insets(3,3,3,3);
 		        
 		        resultsPanel.add(numberOneMatchField,s);
 		        
-		        JLabel numberOneDescription = new JLabel(sortedJobs.get(0).getURL());
-		        s.weightx = 0.5;
+		        numberOneURL.setText("Click Here to Visit: " + sortedJobs.get(0).getURL());
 		        s.gridx = 1;
-		        s.gridy = 0;		        
+		        s.gridy = 0;	
+		        s.weightx = 1;
+		        s.weighty = 1;
 		        
-		        resultsPanel.add(numberOneDescription,s);
+		        numberOneURL.setBorderPainted(false);
+		        numberOneURL.setOpaque(false);
+		        numberOneURL.setBackground(Color.WHITE);
+		        numberOneURL.setToolTipText(sortedJobs.get(0).getURL());
+		        numberOneURL.setSize(10,10);
 		        
-		        JLabel numberTwoMatchField = new JLabel(sortedJobs.get(1).getCompanyName());
-		        numberOneMatchField.setSize(1, 1);
+		        s.fill = GridBagConstraints.NONE;
 
-		        s.fill = GridBagConstraints.VERTICAL;
-		        s.weightx = 0.5;
-		        s.weighty = .5;
+		        
+		        resultsPanel.add(numberOneURL,s);
+		        
+		        JTextArea jobDescription1 = new JTextArea(sortedJobs.get(0).getJobDescription(),7,70);
+		        JScrollPane scroll1 = new JScrollPane(jobDescription1);
+		        
+		        scroll1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);	
+		        scroll1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		        
+		        s.fill = GridBagConstraints.BOTH;
 		        s.gridx = 0;
 		        s.gridy = 1;
+		        s.weightx = 3;
+		        s.weighty = 3;
+		        s.gridwidth = 2;
+
+		        
+
+	        
+		        
+ 
+		        resultsPanel.add(scroll1,s);
+		        
+		        JLabel numberTwoMatchField = new JLabel("Match 2: " + sortedJobs.get(1).getCompanyName());
+		        numberTwoMatchField.setFont(new Font("Serif",Font.BOLD,22));
+		        numberTwoMatchField.setForeground(Color.RED);
+
+		 
+		        s.gridx = 0;
+		        s.gridy = 2;
+		        s.weightx = 1;
+		        s.weighty = 1;
+		        s.gridwidth = 1;
+
+		        
 		        
 		        resultsPanel.add(numberTwoMatchField,s);
 		        
-		        JLabel numberTwoDescription = new JLabel(sortedJobs.get(1).getJobDescription());
-		        s.weightx = 0.5;
+		        numberTwoURL.setText("Click Here to Visit: " +sortedJobs.get(1).getURL());	        
+		        numberTwoURL.setBorderPainted(false);
+		        numberTwoURL.setOpaque(false);
+		        numberTwoURL.setBackground(Color.WHITE);
+		        numberTwoURL.setToolTipText(sortedJobs.get(0).getURL());
+		        numberTwoURL.setSize(10,10);
+		        
+		        s.fill = GridBagConstraints.NONE;  
 		        s.gridx = 1;
-		        s.gridy = 1;		        
-		        
-		        resultsPanel.add(numberTwoDescription,s);
-		        
-		        JLabel numberThreeMatchField = new JLabel(sortedJobs.get(2).getCompanyName());
-		        numberOneMatchField.setSize(1, 1);
-
-		        s.fill = GridBagConstraints.VERTICAL;
-		        s.weightx = 0.5;
-		        s.weighty = .5;
-		        s.gridx = 0;
 		        s.gridy = 2;
+		        s.weightx = 1;
+		        s.weighty = 1;
+		        
+		        resultsPanel.add(numberTwoURL,s);
+		        
+		        JTextArea jobDescription2 = new JTextArea(sortedJobs.get(1).getJobDescription(),5,60);
+		        JScrollPane scroll2 = new JScrollPane(jobDescription2);
+		        
+		        scroll2.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);	
+		        scroll2.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		        
+		        s.fill = GridBagConstraints.BOTH;
+		        s.gridx = 0;
+		        s.gridy = 3;
+		        s.weightx = 3;
+		        s.weighty = 3;
+		        s.gridwidth = 2;
+	        
+		        
+
+		        resultsPanel.add(scroll2,s);
+		        
+
+
+		        JLabel numberThreeMatchField = new JLabel("Match 3: "+ sortedJobs.get(2).getCompanyName());
+		        numberThreeMatchField.setFont(new Font("Serif",Font.BOLD,22));
+		        numberThreeMatchField.setForeground(Color.RED);
+		       
+
+		        s.gridx = 0;
+		        s.gridy = 4;
+		        s.weightx = 1;
+		        s.weighty = 1;
+		        s.gridwidth = 1;
 		        
 		        resultsPanel.add(numberThreeMatchField,s);
 		        
-		        JLabel numberThreeDescription = new JLabel(sortedJobs.get(2).getJobDescription());
-		        s.weightx = 0.5;
+		        numberThreeURL = new JButton("Click Here to Visit: " + sortedJobs.get(2).getURL());
+		        numberThreeURL.setBorderPainted(false);
+		        numberThreeURL.setOpaque(false);
+		        numberThreeURL.setBackground(Color.WHITE);
+		        numberThreeURL.setToolTipText(sortedJobs.get(0).getURL());
+		        numberThreeURL.setSize(10,10);
+		        
+		        s.fill = GridBagConstraints.NONE;
 		        s.gridx = 1;
-		        s.gridy = 2;		        
+		        s.gridy = 4;
+		        s.weightx = 1;
+		        s.weighty = 1;
 		        
-		        resultsPanel.add(numberThreeDescription,s);
+		        resultsPanel.add(numberThreeURL,s);
 		        
+		        JTextArea jobDescription3 = new JTextArea(sortedJobs.get(2).getJobDescription(),7,70);
+		        JScrollPane scroll3 = new JScrollPane(jobDescription3);
 		        
-		        backToResumePanelButton = new JButton("< Back");
-		        backToResumePanelButton.addActionListener(this);
-		        s.weightx = 0.5;
-		        s.gridx = 1;
-		        s.gridy = 3;
-		        resultsPanel.add(backToResumePanelButton,s);
+ 
+		        scroll3.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);	
+		        scroll3.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		        s.fill = GridBagConstraints.BOTH;		        
+		        s.gridx = 0;
+		        s.gridy = 5;
+		        s.weightx = 3;
+		        s.weighty = 3;
+		        s.gridwidth = 2;
+
+	        
+		        resultsPanel.add(scroll3,s);
+		        
+		        s.fill = GridBagConstraints.NONE;
+		        
+		       // backToResumePanelButton = new JButton("< Back");
+		        //backToResumePanelButton.addActionListener(this);
+		        //s.gridx = 1;
+		        //s.gridy = 6;
+		        //resultsPanel.add(backToResumePanelButton,s);
 			
 			CardLayout cl = (CardLayout) (cards.getLayout());
 			cl.show(cards, RESULTSPANEL);
@@ -617,6 +739,7 @@ public class project implements ActionListener {
 			
 			
 		}
+
 	//###############	
 		if(e.getSource().equals(backToResumePanelButton)){
 			CardLayout cl = (CardLayout) (cards.getLayout());
