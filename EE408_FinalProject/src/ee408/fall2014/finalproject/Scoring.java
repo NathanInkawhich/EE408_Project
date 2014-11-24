@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class Scoring {
 
-	public int produceScore( User u , JobPosting jp ){
+	public int produceScore(user u , JobPosting jp ){
 		
 		int totalScore = 0;
 		
@@ -46,7 +46,7 @@ public class Scoring {
 	 * @param jobsList Array list of JobPosting objects
 	 * @return sorted array list of matching jobs
 	 */
-	public ArrayList<JobPosting> findBestMatches(User u, ArrayList<JobPosting> jobsList){
+	public ArrayList<JobPosting> findBestMatches(user u, ArrayList<JobPosting> jobsList){
 		
 		ArrayList<JobPosting> matchingFieldsList = new ArrayList<JobPosting>();//This stores the jobPostings that have the users desired job field
 		

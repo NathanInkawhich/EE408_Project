@@ -19,17 +19,92 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import java.awt.*;
+import java.awt.event.*;
+
+import javax.swing.*;
+
+import java.awt.event.ActionListener;
  
-public class project implements ActionListener, MouseListener {
-    final static boolean shouldFill = true;
-    final static boolean shouldWeightX = true;
-    final static boolean RIGHT_TO_LEFT = false;
-    
-    JPanel cards;
-    final static String RESUMEPANEL = "RESUME SCREEN";
-    final static String RESULTSPANEL = "RESULTS SCREEN";
-    final static String INFOPANEL = "INFO SCREEN";
+public class project extends JFrame implements ActionListener {
 	
+	    final static boolean shouldFill = true;
+	    final static boolean shouldWeightX = true;
+	    final static boolean RIGHT_TO_LEFT = false;
+	    
+	    JPanel cards;
+	    final static String RESUMEPANEL = "RESUME SCREEN";
+	    final static String RESULTSPANEL = "RESULTS SCREEN";
+	    final static String INFOPANEL = "INFO SCREEN";
+	
+
+    	final static String LOGINPANEL = "LOGIN SCREEN";
+    	final static String MESSAGEPANEL = "LOGIN RESULT";
+    	final static String NEWACCOUNTPANEL = "CREATE NEW ACCOUNT";
+    	final static String RECOVERY = "ACCOUNT RECOVERY";
+
+    	int userCount = 7;
+
+    	int securityTest = 0;
+    	int recoveryTest = 0;
+    	
+    	//Where the GUI is created:
+    	JMenuBar menuBar;
+    	JMenu menu, submenu;
+    	JMenuItem menuItem;
+    	JRadioButtonMenuItem rbMenuItem;
+    	JCheckBoxMenuItem cbMenuItem;
+    	
+    	JTextField userName = new JTextField("", 20);
+    	JTextField recoveryUserName = new JTextField("", 20);
+    	JTextField recoveryQuestionAnswer = new JTextField("", 20);
+    	JTextField securityQuestionAnswer2 = new JTextField("", 20);
+    	JTextField recoveredPassword = new JTextField("", 20);	
+    	JPasswordField newPassword = new JPasswordField("", 20);
+    	JPasswordField newPasswordCheck = new JPasswordField("", 20);
+    	JTextField firstName2 = new JTextField("", 20);
+    	JTextField lastName2 = new JTextField("", 20);
+    	JTextField textfield = new JTextField("", 20);
+    	JPasswordField passfield = new JPasswordField("", 20);
+    	
+    	
+
+    	JLabel message = new JLabel();
+    	
+    	JButton forgotPassword = new JButton("Can't Access Acount");
+    	JButton submit2 = new JButton("Submit");
+    	JButton SignIn = new JButton("Sign in");
+    	JButton NewUser = new JButton("New User?");
+    	JButton returnToLogin = new JButton("Return To Login Screen");
+    	JButton submitRecovery = new JButton("Submit");
+    	JButton returnRecovery = new JButton("Return to Login");
+    	
+    	user[] USERS = new user[100];
+    	
+
+    	
+    	private String username = "";
+    	private String password = "";
+    	
+    	private String formMessage(String firstname, String lastname, boolean authenticate ) {
+    		String mtext = new String();
+    		if(authenticate)
+    		{
+    		  mtext="Dear "+firstname+" "+lastname+",\n"; 
+    		  mtext+=  " Welcome!";
+    		}
+    		
+    		return mtext;
+
+    	}
+    	
+  	//
+    
+    
+    
+    
+    
 	String resumeFilePath;
 	
 	ArrayList<JobPosting> jobsList = new ArrayList<JobPosting>();
@@ -122,13 +197,310 @@ public class project implements ActionListener, MouseListener {
     // End of Info page stuff
     JButton clearInfoButton;
 	JButton backToInfoButton;
+	
+	
+	JButton editPersonalInfo;
+	JButton findJob;
+	JButton editResume;
+	JButton infoBack;
+	JLabel infoStatus;
+	JLabel resumeStatus;
+	JButton newAccBack;
     
-	 User currentUser1;//This represents the user who is filling out the application
+	 user currentUser1;//This represents the user who is filling out the application
 	 
-	 User currentUser;//This represents the user who is filling out the application
+	 user currentUser;//This represents the user who is filling out the application
 	 
     public void addComponentsToPane(Container pane) {
-    	
+    	//
+    	//STATIC LSIT OF USER NAMES AND PASSWORDS
+		String[] initialUsers = {"emersocj" , "bkantarci", "jpsartre", "jjoyce", "owilde",
+			"pmodiano", "jsaramago", "sbeckett" };
+	String[] initialPasswords = { "emerson12", "35912", "26481", "2241", "14501",
+			"357912", "15222", "1234" };
+
+	String [] firstnames={"Cody", "Burak", "Jean Paul", "James", "Oscar", "Patrick", "Jose", "Samuel"};
+	String [] lastnames={"Emerson","Kantarci", "Sartre", "Joyce", "Wilde", "Modiano", "Saramago", "Beckett"};
+	
+	String[] maidenNames = {"Kantarci", "Sartre", "Joyce", "Wilde", "Modiano", "Saramago", "Beckett"};
+	//Define the users
+	for (int i = 0; i < 7; i++) {
+		{
+			USERS[i] = new user(initialUsers[i], initialPasswords[i],maidenNames[i]);
+			USERS[i].setName(firstnames[i],lastnames[i]);
+		}
+		
+		
+	}
+
+
+
+JLabel topLabel = new JLabel();
+topLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
+topLabel.setForeground(Color.RED);
+topLabel.setText("Job Finders APP");
+JPanel labelpane = new JPanel();
+labelpane.add(topLabel);
+
+
+
+
+
+	
+
+//Create the "cards".
+	JPanel card1 = new JPanel(new GridBagLayout());
+	message.setForeground(Color.BLUE);
+	message.setFont(new Font("Helvetica", Font.ITALIC, 16));	
+	
+	GridBagConstraints gbc2 = new GridBagConstraints();
+	
+	gbc2.gridx = 1;
+	gbc2.gridy = 0;
+	gbc2.gridwidth = 2;
+	gbc2.weighty = 2;
+
+	gbc2.anchor = GridBagConstraints.EAST;
+	
+	card1.add(message,gbc2);
+	
+	editPersonalInfo = new JButton("Edit Personal Information");
+	
+	editPersonalInfo.addActionListener(this);
+	gbc2.anchor = GridBagConstraints.CENTER;
+	gbc2.gridx = 0;
+	gbc2.gridy = 3;
+	gbc2.gridwidth = 1;
+	
+	card1.add(editPersonalInfo,gbc2);
+	
+	findJob = new JButton("Find Job");
+	findJob.addActionListener(this);
+	gbc2.gridx = 1;
+	gbc2.gridy = 3;
+	gbc2.fill = GridBagConstraints.HORIZONTAL;
+	card1.add(findJob,gbc2);
+
+	gbc2.gridx = 2;
+	gbc2.gridy = 3;
+	gbc2.gridwidth = 1;	
+	card1.add(returnToLogin,gbc2);
+	
+	editResume = new JButton("Edit Resume");
+	editResume.addActionListener(this);
+	gbc2.gridx = 3;
+	gbc2.gridy = 3;
+	gbc2.gridwidth = 1;	
+	card1.add(editResume,gbc2);
+	
+	infoStatus = new JLabel("*Please Submit your personal information*");
+	infoStatus.setFont(new Font("Serif",Font.BOLD,16));
+	infoStatus.setForeground(Color.RED);
+	gbc2.gridx = 1;
+	gbc2.gridy = 2;
+	gbc2.gridwidth = 2;	
+	card1.add(infoStatus,gbc2);
+	
+	resumeStatus = new JLabel("*Please Submit your resume information*");
+	resumeStatus.setFont(new Font("Serif",Font.BOLD,16));
+	resumeStatus.setForeground(Color.RED);
+	gbc2.gridx = 1;
+	gbc2.gridy = 1;
+	gbc2.gridwidth = 2;	
+	card1.add(resumeStatus,gbc2);
+
+	
+	NewUser.setSize(SignIn.getSize());
+
+	
+	JPanel card2 = new JPanel();
+	card2.setLayout(new BorderLayout());
+	
+	SignIn.addActionListener(this);
+	NewUser.addActionListener(this);
+	returnToLogin.addActionListener(this);
+	forgotPassword.addActionListener(this);
+	submitRecovery.addActionListener(this);
+	returnRecovery.addActionListener(this);
+	
+	
+	
+	JPanel myForm = new JPanel();
+	myForm.setLayout(new GridBagLayout());
+
+	GridBagConstraints d = new GridBagConstraints();
+
+	d.gridx = 0;
+	d.gridy = 0;
+	d.anchor = GridBagConstraints.EAST;
+
+	myForm.add(new JLabel("User Name:"), d);
+	d.weightx = 3;
+	d.gridx = 1;
+	d.gridy = 0;
+	myForm.add(textfield, d);
+
+	d.gridx = 0;
+	d.gridy = 1;
+	d.weightx = 1;
+	myForm.add(new JLabel("Password:"), d);
+
+	d.weightx = 3;
+
+	d.gridx = 1;
+	d.gridy = 1;
+	myForm.add(passfield, d);
+
+	card2.add(myForm, BorderLayout.PAGE_START);
+	
+
+	d.weightx=1;
+	d.fill = 0;
+	d.gridx = 1;
+	d.gridy = 2;
+	d.anchor = GridBagConstraints.WEST;
+	JPanel signinpanel = new JPanel();
+	signinpanel.add(SignIn,BorderLayout.EAST);
+	myForm.add(signinpanel, d);
+	
+
+	d.gridx = 1;
+	d.gridy = 2;
+	d.anchor = GridBagConstraints.EAST;
+	JPanel newUserPanel = new JPanel();
+	newUserPanel.add(NewUser,BorderLayout.WEST);
+	myForm.add(newUserPanel,d);
+	
+	
+
+	d.gridx = 0;
+	d.gridy = 2;
+	signinpanel.add(SignIn,BorderLayout.EAST);
+	JPanel AccesssAccountPanel = new JPanel();
+	AccesssAccountPanel.add(forgotPassword,BorderLayout.WEST);
+	myForm.add(AccesssAccountPanel,d);
+	
+	JPanel card3 = new JPanel();
+	card3.setLayout(new BorderLayout());
+	JPanel newAccountPanel = new JPanel();
+	newAccountPanel.setLayout(new GridBagLayout());
+		
+	d.insets = new Insets(5,5,5,5);
+	d.gridx = 0;
+	d.gridy = 0;
+	d.anchor = GridBagConstraints.EAST;
+	newAccountPanel.add(new JLabel("First Name:"), d);
+	d.weightx = 3;
+	d.gridx = 1;
+	d.gridy = 0;
+
+	newAccountPanel.add(firstName2, d);
+	
+	d.gridx = 0;
+	d.gridy = 1;		
+	newAccountPanel.add(new JLabel("Last Name:"), d);
+	d.weightx = 3;
+	d.gridx = 1;
+	d.gridy = 1;
+	newAccountPanel.add(lastName2, d);
+	d.gridx = 0;
+	d.gridy = 2;
+
+
+	newAccountPanel.add(new JLabel("User Name:"), d);
+	d.weightx = 3;
+	d.gridx = 1;
+	d.gridy = 2;
+	newAccountPanel.add(userName, d);
+	
+	d.gridx = 0;
+	d.gridy = 3;
+	newAccountPanel.add(new JLabel("Password:"), d);
+	d.weightx = 3;
+	d.gridx = 1;
+	d.gridy = 3;
+	newAccountPanel.add(newPassword, d);	
+	d.gridx = 0;
+	d.gridy = 4;
+	newAccountPanel.add(new JLabel("Confirm Password:"), d);
+	d.weightx = 3;
+	d.gridx = 1;
+	d.gridy = 4;	
+	newAccountPanel.add(newPasswordCheck, d);	
+	d.gridx = 0;
+	d.gridy = 5;
+	newAccountPanel.add(new JLabel("Mother's maiden name "), d);
+	d.weightx = 3;
+	d.gridx = 1;
+	d.gridy = 5;
+	newAccountPanel.add(securityQuestionAnswer2,d);
+	
+
+	d.gridx = 1;
+	d.gridy = 6;
+	submit2.addActionListener(this);
+	newAccountPanel.add(submit2, d);
+	
+	newAccBack = new JButton("Back");
+	newAccBack.addActionListener(this);
+	d.gridx = 0;
+	d.gridy = 6;
+	
+	newAccountPanel.add(newAccBack,d);
+	
+	
+	card3.add(newAccountPanel, BorderLayout.PAGE_START);
+	
+	JPanel card4 = new JPanel();
+	card4.setLayout(new BorderLayout());
+	JPanel recoveryPanel = new JPanel();
+	recoveryPanel.setLayout(new GridBagLayout());	
+	
+	
+	d.gridx = 0;
+	d.gridy = 0;
+	recoveryPanel.add(new JLabel("Username"), d);
+	d.gridx = 1;
+	d.gridy = 0;
+	d.weightx = 3;
+	recoveryPanel.add(recoveryUserName,d);
+	
+	d.gridx = 0;
+	d.gridy = 1;
+	recoveryPanel.add(new JLabel("Mother's Maiden Name:"), d);
+	d.gridx = 1;
+	d.gridy = 1;
+	d.weightx = 3;
+	recoveryPanel.add(recoveryQuestionAnswer,d);
+	
+	d.gridx = 0;
+	d.gridy = 5;
+	recoveryPanel.add(new JLabel("Password"), d);
+	d.gridx = 1;
+	d.gridy = 5;
+	recoveryPanel.add(recoveredPassword,d);
+	
+	d.gridx = 1;
+	d.gridy = 4;
+	recoveryPanel.add(submitRecovery,d);
+	
+	d.gridx = 1;
+	d.gridy = 6;
+	recoveryPanel.add(returnRecovery,d);
+	
+	
+
+	
+	
+	
+	card4.add(recoveryPanel,BorderLayout.PAGE_START);
+	// Create the panel that contains the "cards".
+	cards = new JPanel(new CardLayout());
+
+
+
+	pane.add(labelpane, BorderLayout.PAGE_START);
+	//pane.add(cards, BorderLayout.CENTER);
     	
 		//*******************INITIALIZE DATABASE
 		HashSet<String> IBMKeys = new HashSet<String>();
@@ -170,9 +542,9 @@ public class project implements ActionListener, MouseListener {
 	    jobURL2.addActionListener(this);
 	    jobURL3.addActionListener(this);
 	    
-	    jobURL1.addMouseListener(this);
-	    jobURL2.addMouseListener(this);
-	    jobURL3.addMouseListener(this);
+	    //jobURL1.addMouseListener(this);
+	    //jobURL2.addMouseListener(this);
+	    //jobURL3.addMouseListener(this);
 		
 		for(int i = 0; i<companyNames.length; i++){
 			JobPosting jp = new JobPosting(companyNames[i],jobDescriptions[i], jobTimes[i], jobTypes[i], keywordList.get(i),jobURL[i]);
@@ -406,6 +778,14 @@ public class project implements ActionListener, MouseListener {
 		c.gridx = 0;
 		c.gridy = 10;
 		infoPanel.add(clearInfoButton, c);
+		c.weightx = 0.5;
+		c.gridx = 1;
+		c.gridy = 10;
+		
+		infoBack = new JButton("Back");
+		infoBack.addActionListener(this);
+		infoPanel.add(infoBack,c);
+		
 		
 		
 		
@@ -414,7 +794,7 @@ public class project implements ActionListener, MouseListener {
 		backToInfoButton = new JButton("< Back");
 		
     //Set up resume Panel***********************
-    	resumePanel = new JPanel(new GridBagLayout());//Panel to store the resume stuff
+    	resumePanel = new JPanel(new GridBagLayout());
     	c = new GridBagConstraints();
     	//resumePanel.setPreferredSize(new Dimension(100,100));
     	JLabel resumeLabel= new JLabel("Upload your resume here:");
@@ -557,322 +937,31 @@ public class project implements ActionListener, MouseListener {
       //FOR RESULTS CARD
         resultsPanel = new JPanel(new GridBagLayout());
         
-        cards = new JPanel(new CardLayout());
-        cards.add(infoPanel,INFOPANEL);
+    	cards.add(card2, LOGINPANEL);
+    	cards.add(card1, MESSAGEPANEL);
+    	cards.add(card3, NEWACCOUNTPANEL);
+    	cards.add(card4, RECOVERY);
+        
+        cards.add(infoPanel, INFOPANEL);
 		cards.add(topLevelPanel,RESUMEPANEL);
 		cards.add(resultsPanel, RESULTSPANEL);
 	
 		pane.add(cards);
     
     }
-    public void actionPerformed(ActionEvent e) {
     
-    //###############
-		if (e.getSource().equals(browseResumeButton)) {
-			FileFilter filter = new FileNameExtensionFilter("TextFile", "txt");
-	        JFileChooser chooser = new JFileChooser();
-	        //chooser.addChoosableFileFilter(filter);
-	        chooser.setFileFilter(filter);
-	        
-	        int returnVal = chooser.showOpenDialog(null);
-	        
-	        if(returnVal == JFileChooser.APPROVE_OPTION){
-	            
-	            File myFile = chooser.getSelectedFile();
-	            String text = myFile + "";
-	            
-	            resumeField.setText(text);
-	            resumeFilePath = text;
-	            System.out.println("File path to resume: " + resumeFilePath);
-	        }
-		}
-	//###############	
-		if(e.getSource().equals(submitResumePanelButton)){
-			
-			//PARSE THE RESUME
-			if(resumeFilePath!=null){
-				TextFileParser tfp = new TextFileParser();
-				Set<String> temp = tfp.parseTextFile(resumeFilePath);
-				
-				currentUser1.setUserKeywords( temp );
-				currentUser1.setAreaOfInterest( (String)areaOfInterestBox.getSelectedItem() );
-				currentUser1.setFullTime( fullTimeButton.isSelected() );
-				currentUser1.setLevelOfEducation( (String)levelOfEducationBox.getSelectedItem() );
-				
-				currentUser1.printUserInfo();
-				Scoring score = new Scoring();
-				sortedJobs = score.findBestMatches(currentUser1, jobsList);
-
-				GridBagConstraints gbc = new GridBagConstraints();
-				
-				JLabel companyOneLabel = new JLabel("1. " + sortedJobs.get(0).getCompanyName());
-				companyOneLabel.setFont(new Font("Serif",Font.BOLD,22));
-				companyOneLabel.setForeground(Color.red);
-				
-				gbc.fill = GridBagConstraints.BOTH;
-				gbc.weightx = 1;
-				gbc.weighty = 1;
-				gbc.gridx = 0;
-				gbc.gridy = 0;
-		        
-		        resultsPanel.add(companyOneLabel,gbc);
-		        
-		        jobURL1.setText(sortedJobs.get(0).getURL());
-		        
-		        jobURL1.setBorderPainted(false);
-		        jobURL1.setOpaque(false);
-		        jobURL1.setBackground(Color.WHITE);
-		        jobURL1.setFont(new Font("Serif",Font.ITALIC,18));
-		        jobURL1.setForeground(Color.blue);
-		        
-				gbc.fill = GridBagConstraints.NONE;
-				gbc.weightx = 1;
-				gbc.weighty = 1;
-				gbc.gridx = 1;
-				gbc.gridy = 0;
-				
-				resultsPanel.add(jobURL1,gbc);
-				
-				JTextArea jobDesc1 = new JTextArea(sortedJobs.get(0).getJobDescription());
-				jobDesc1.setLineWrap(true);
-				jobDesc1.setEditable(false);
-				JScrollPane scroll1 = new JScrollPane(jobDesc1);
-				scroll1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-				scroll1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);				
-				
-				gbc.fill = GridBagConstraints.BOTH;
-				gbc.weightx = 3;
-				gbc.weighty = 3;
-				gbc.gridx = 0;
-				gbc.gridy = 1;	 
-				gbc.gridwidth = 2;
-				
-				resultsPanel.add(scroll1,gbc);
-				
-				JLabel companyTwoLabel = new JLabel("2. " + sortedJobs.get(1).getCompanyName());
-				companyTwoLabel.setFont(new Font("Serif",Font.BOLD,22));
-				companyTwoLabel.setForeground(Color.blue);
-				
-				gbc.fill = GridBagConstraints.BOTH;
-				gbc.weightx = 1;
-				gbc.weighty = 1;
-				gbc.gridx = 0;
-				gbc.gridy = 2;
-		        
-		        resultsPanel.add(companyTwoLabel,gbc);
-		        
-		        jobURL2.setText(sortedJobs.get(1).getURL());
-		        
-		        jobURL2.setBorderPainted(false);
-		        jobURL2.setOpaque(false);
-		        jobURL2.setBackground(Color.WHITE);
-		        jobURL2.setFont(new Font("Serif",Font.ITALIC,18));
-		        jobURL2.setForeground(Color.blue);
-		        
-				gbc.fill = GridBagConstraints.NONE;
-				gbc.weightx = 1;
-				gbc.weighty = 1;
-				gbc.gridx = 1;
-				gbc.gridy = 2;
-				
-				resultsPanel.add(jobURL2,gbc);
-				
-				JTextArea jobDesc2 = new JTextArea(sortedJobs.get(1).getJobDescription());
-				jobDesc2.setLineWrap(true);
-				jobDesc2.setEditable(false);
-				JScrollPane scroll2 = new JScrollPane(jobDesc2);
-				scroll2.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-				scroll2.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-				
-				
-				gbc.fill = GridBagConstraints.BOTH;
-				gbc.weightx = 3;
-				gbc.weighty = 3;
-				gbc.gridx = 0;
-				gbc.gridy = 3;	 
-				gbc.gridwidth = 2;
-				
-				resultsPanel.add(scroll2,gbc);
-				
-				JLabel companyThreeLabel = new JLabel("3. " + sortedJobs.get(2).getCompanyName());
-				companyThreeLabel.setFont(new Font("Serif",Font.BOLD,22));
-				companyThreeLabel.setForeground(Color.BLACK);
-				
-				gbc.fill = GridBagConstraints.BOTH;
-				gbc.weightx = 1;
-				gbc.weighty = 1;
-				gbc.gridx = 0;
-				gbc.gridy = 4;
-		        
-		        resultsPanel.add(companyThreeLabel,gbc);
-		        
-		        jobURL3.setText(sortedJobs.get(2).getURL());
-		        
-		        jobURL3.setBorderPainted(false);
-		        jobURL3.setOpaque(false);
-		        jobURL3.setBackground(Color.WHITE);
-		        jobURL3.setFont(new Font("Serif",Font.ITALIC,18));
-		        jobURL3.setForeground(Color.blue);
-		        
-				gbc.fill = GridBagConstraints.NONE;
-				gbc.weightx = 1;
-				gbc.weighty = 1;
-				gbc.gridx = 1;
-				gbc.gridy = 4;
-				
-				resultsPanel.add(jobURL3,gbc);
-				
-				JTextArea jobDesc3 = new JTextArea(sortedJobs.get(2).getJobDescription());
-				jobDesc3.setLineWrap(true);
-				jobDesc2.setEditable(false);
-				JScrollPane scroll3 = new JScrollPane(jobDesc3);
-				scroll3.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-				scroll3.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-				
-				
-				gbc.fill = GridBagConstraints.BOTH;
-				gbc.weightx = 3;
-				gbc.weighty = 3;
-				gbc.gridx = 0;
-				gbc.gridy = 5;	 
-				gbc.gridwidth = 2;
-				
-				resultsPanel.add(scroll3,gbc);
-						        
-		        
-		        backToResumePanelButton = new JButton("< Back");
-		        backToResumePanelButton.addActionListener(this);
-		        
-				
-				gbc.fill = GridBagConstraints.NONE;
-				gbc.weightx = 1;
-				gbc.weighty = 1;
-				gbc.gridx = 1;
-				gbc.gridy = 6;	 
-				gbc.gridwidth = 1;
-
-		        resultsPanel.add(backToResumePanelButton,gbc);
-				
-				
-		        
-				
-				CardLayout cl = (CardLayout) (cards.getLayout());
-				cl.show(cards, RESULTSPANEL);
-			}
-			else {
-//				JFrame frame = new JFrame();
-				System.out.println("No File selected...");
-				JOptionPane.showMessageDialog(null, "No File Selected.");
-				CardLayout cl = (CardLayout) (cards.getLayout());
-				cl.show(cards, RESUMEPANEL);
-			}
-		}
-		
-		if(e.getSource().equals(jobURL1))
-		{
-		     try {
-				Desktop.getDesktop().browse(java.net.URI.create(sortedJobs.get(0).getURL()));
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
-		}
-		
-		if(e.getSource().equals(jobURL2))
-		{
-		     try {
-				Desktop.getDesktop().browse(java.net.URI.create(sortedJobs.get(1).getURL()));
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
-		}
-		if(e.getSource().equals(jobURL3))
-		{
-		     try {
-				Desktop.getDesktop().browse(java.net.URI.create(sortedJobs.get(2).getURL()));
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
-		}
-				
-//				currentUser.setUserKeywords( temp );
-//				currentUser.setAreaOfInterest( (String)areaOfInterestBox.getSelectedItem() );
-//				currentUser.setFullTime( fullTimeButton.isSelected() );
-//				currentUser.setLevelOfEducation( (String)levelOfEducationBox.getSelectedItem() );
-//				
-//				currentUser.printUserInfo();
-//				Scoring score = new Scoring();
-//				ArrayList<JobPosting> sortedJobs = score.findBestMatches(currentUser, jobsList);
-//				//System.out.println("\n\n*********PARSE THE RESUME***************");
-//				//System.out.println("These are all of the unique words in the input resume: ");
-//				//tfp.printSet(temp);
-//			//END RESUME PARSING
-			
-		
-	//###############	
-		if(e.getSource().equals(backToResumePanelButton)){
-			CardLayout cl = (CardLayout) (cards.getLayout());
-			cl.show(cards, RESUMEPANEL);
-		}
-	//###############
-//		if(e.getSource().equals(submit)){//information panel submit button
-//			
-//			currentUser1 = new User();//Initialize user object here because this is the first stage in the application process
-//			
-//			//I DONT THINK THESE VARIABLES NEED GLOBAL SCOPE!!!!!!!!!!!!!
-//			
-//			this.first = firstName.getText();
-//			this.middle = middleName.getText();
-//			this.last = lastName.getText();
-//			this.fullName = this.first + this.middle + this.last;
-//			this.day = (String) dayDOB.getSelectedItem();
-//			this.month = (String) monthDOB.getSelectedItem();
-//			this.year =  (String) yearDOB.getSelectedItem();
-//			this.DOB = this.day + this.month + this.year;
-//			this.email = emailField.getText();
-//			this.phoneNumber = phoneNumberField.getText();
-//	//###############
-		if(e.getSource().equals(submit)){//information panel submit button
-			
-			currentUser1 = new User();//Initialize user object here because this is the first stage in the application process
-			
-			//I DONT THINK THESE VARIABLES NEED GLOBAL SCOPE!!!!!!!!!!!!!
-			 this.first = firstName.getText();
-			 this.middle = middleName.getText();
-			 this.last = lastName.getText();
-			 this.fullName = this.first + this.middle + this.last;
-			 this.day = (String) dayDOB.getSelectedItem();
-			 this.month = (String) monthDOB.getSelectedItem();
-			 this.year =  (String) yearDOB.getSelectedItem();
-			 this.DOB = this.day + this.month + this.year;
-			 this.email = emailField.getText();
-			 this.phoneNumber = phoneNumberField.getText();
-			 
-			 currentUser1.setFullName(first+ " " + middle + " " + last);
-			 
-			CardLayout cl = (CardLayout) (cards.getLayout());
-			cl.show(cards, RESUMEPANEL);
-		}
-		if(e.getSource().equals(backToInfoButton)){
-			CardLayout cl = (CardLayout)(cards.getLayout());
-			cl.show(cards, INFOPANEL);
-		}
-		if(e.getSource().equals(clearInfoButton)){
-			firstName.setText("");
-			middleName.setText("");
-			lastName.setText("");
-			emailField.setText("");
-			phoneNumberField.setText("");
-//			CardLayout cl = (CardLayout)(cards.getLayout());
-//			cl.show(cards, INFOPANEL);
-		}
-    }
    
+	public int userAuthenticated(String username, String password) {
+		
+		for(int i = 0; i < user.numOfUsers; i++)
+			if(username.equals(USERS[i].username))
+				if(password.equals(USERS[i].password))
+					return i;
+
+		System.out.println("Failed to authenticate" + password);
+		return -1;
+
+	}
     /**
      * Create the GUI and show it.  For thread safety,
      * this method should be invoked from the
@@ -901,39 +990,436 @@ public class project implements ActionListener, MouseListener {
             }
         });
     }
-    
+
+
 	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void mouseExited(MouseEvent mk) {
-		if(mk.getSource().equals(jobURL1))
-        jobURL1.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		
-		if(mk.getSource().equals(jobURL2))
-	        jobURL2.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		
-		if(mk.getSource().equals(jobURL3))
-	        jobURL3.setCursor(new Cursor(Cursor.HAND_CURSOR));
+	public void actionPerformed(ActionEvent e) {
+
+		if (e.getSource().equals(SignIn)) {
+
+			username = textfield.getText();
+			String tempString = new String(passfield.getPassword());
+			password = tempString;
+			int userindex = userAuthenticated(username, password);
+			System.out.println(userindex);
+			if(securityTest < 5){
+				if (userindex >= 0) 
+				{
 			
-		// TODO Auto-generated method stub
+					message.setText(formMessage(USERS[userindex].firstname,USERS[userindex].lastname,true));
+					CardLayout cl = (CardLayout) (cards.getLayout());
+					cl.show(cards, MESSAGEPANEL);				
+				}
+				else
+					
+				{
+					securityTest++;
+					JOptionPane.showMessageDialog(null,"Login Failed, Wrong Username or Password.");
+					
+				}		
+			}
+			else
+				JOptionPane.showMessageDialog(null,"Login Failed, Too many attemps.");
+			
+		}
+		if(e.getSource().equals(NewUser))
+		{
+
+			CardLayout cl = (CardLayout) (cards.getLayout());
+			cl.show(cards, NEWACCOUNTPANEL);
+			
+		}
 		
-	}
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+		if(e.getSource().equals(submit2))
+		{
+			boolean passwordCheck = false;
+			boolean usernameCheck = false;
+			boolean usernameLengthTest = false;
+			boolean maidenLengthTest = false;
+			boolean passwordLengthTest = false;
+			String username1 = userName.getText();
+			String password = newPassword.getText();
+			String password2 = newPasswordCheck.getText();
+			String maidenName =  securityQuestionAnswer2.getText();
+			
+
+			if(username1.length()<3 || username1.length()> 8)
+			{
+				usernameLengthTest = true;
+				 JOptionPane.showMessageDialog(null,"Username name is too short or too Long.");
+			}
+			if(maidenName.length()<3 || maidenName.length()> 15)
+			{
+				maidenLengthTest = true;
+				 JOptionPane.showMessageDialog(null,"Maiden name is too short or too Long.");
+			}
+			if(password.length()<5 || password.length()> 12)
+			{
+				passwordLengthTest = true;
+				 JOptionPane.showMessageDialog(null,"Password is too short or too Long.");
+			}
+				
+			if(!password.equals(password2)) 			
+			{
+				passwordCheck = true;
+				 JOptionPane.showMessageDialog(null,"Password fields do not mathch.");
+				System.out.println("Passwords not equal");					
+			}
+						
+			for(int i = 0; i < user.numOfUsers;i++)
+			{
+				if(this.USERS[i].username.equals(username1))
+				{
+					 usernameCheck = true;
+					 JOptionPane.showMessageDialog(null,"Username already taken.");
+					System.out.println("Usernames equal");
+				}
+			}
+			
+			if(usernameCheck == false && passwordCheck == false && passwordLengthTest == false
+					&& usernameLengthTest == false && maidenLengthTest == false)
+			{
+				USERS[userCount] = new user(username1,password,maidenName);
+				USERS[userCount].setName(firstName2.getText(), lastName2.getText());
+				CardLayout cl2 = (CardLayout) (cards.getLayout());
+				cl2.show(cards, LOGINPANEL);
+				userCount++;
+			}	
+		}
+		if(e.getSource().equals(returnToLogin))
+		{
+			CardLayout cl = (CardLayout) (cards.getLayout());
+			cl.show(cards, LOGINPANEL);	
+		}
+		if(e.getSource().equals(editPersonalInfo))
+		{
+			CardLayout cl = (CardLayout) (cards.getLayout());
+			cl.show(cards,INFOPANEL);
+		}
+		if(e.getSource().equals(findJob))
+		{
+			if(!resumeField.getText().equals(""))
+			{
+				CardLayout cl = (CardLayout) (cards.getLayout());
+				cl.show(cards,RESULTSPANEL);
+			}
+			
+		}
+		if(e.getSource().equals(editResume))
+		{
+			CardLayout cl = (CardLayout) (cards.getLayout());
+			cl.show(cards,RESUMEPANEL);
+		}
+		if (e.getSource().equals(browseResumeButton)) {
+			FileFilter filter = new FileNameExtensionFilter("TextFile", "txt");
+	        JFileChooser chooser = new JFileChooser();
+	        //chooser.addChoosableFileFilter(filter);
+	        chooser.setFileFilter(filter);
+	        
+	        int returnVal = chooser.showOpenDialog(null);
+	        
+	        if(returnVal == JFileChooser.APPROVE_OPTION){
+	            
+	            File myFile = chooser.getSelectedFile();
+	            String text = myFile + "";
+	            
+	            resumeField.setText(text);
+	            resumeFilePath = text;
+	            System.out.println("File path to resume: " + resumeFilePath);
+	        }
+		}
+			if(e.getSource().equals(submitResumePanelButton)){
+				
+				//PARSE THE RESUME
+				if(resumeFilePath!=null){
+					TextFileParser tfp = new TextFileParser();
+					Set<String> temp = tfp.parseTextFile(resumeFilePath);
+					
+					currentUser1.setUserKeywords( temp );
+					currentUser1.setAreaOfInterest( (String)areaOfInterestBox.getSelectedItem() );
+					currentUser1.setFullTime( fullTimeButton.isSelected() );
+					currentUser1.setLevelOfEducation( (String)levelOfEducationBox.getSelectedItem() );
+					
+					currentUser1.printUserInfo();
+					Scoring score = new Scoring();
+					sortedJobs = score.findBestMatches(currentUser1, jobsList);
+
+					GridBagConstraints gbc = new GridBagConstraints();
+					
+					JLabel companyOneLabel = new JLabel("1. " + sortedJobs.get(0).getCompanyName());
+					companyOneLabel.setFont(new Font("Serif",Font.BOLD,22));
+					companyOneLabel.setForeground(Color.red);
+					
+					gbc.fill = GridBagConstraints.BOTH;
+					gbc.weightx = 1;
+					gbc.weighty = 1;
+					gbc.gridx = 0;
+					gbc.gridy = 0;
+			        
+			        resultsPanel.add(companyOneLabel,gbc);
+			        
+			        jobURL1.setText(sortedJobs.get(0).getURL());
+			        
+			        jobURL1.setBorderPainted(false);
+			        jobURL1.setOpaque(false);
+			        jobURL1.setBackground(Color.WHITE);
+			        jobURL1.setFont(new Font("Serif",Font.ITALIC,18));
+			        jobURL1.setForeground(Color.blue);
+			        
+					gbc.fill = GridBagConstraints.NONE;
+					gbc.weightx = 1;
+					gbc.weighty = 1;
+					gbc.gridx = 1;
+					gbc.gridy = 0;
+					
+					resultsPanel.add(jobURL1,gbc);
+					
+					JTextArea jobDesc1 = new JTextArea(sortedJobs.get(0).getJobDescription());
+					jobDesc1.setLineWrap(true);
+					jobDesc1.setEditable(false);
+					JScrollPane scroll1 = new JScrollPane(jobDesc1);
+					scroll1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+					scroll1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);				
+					
+					gbc.fill = GridBagConstraints.BOTH;
+					gbc.weightx = 3;
+					gbc.weighty = 3;
+					gbc.gridx = 0;
+					gbc.gridy = 1;	 
+					gbc.gridwidth = 2;
+					
+					resultsPanel.add(scroll1,gbc);
+					
+					JLabel companyTwoLabel = new JLabel("2. " + sortedJobs.get(1).getCompanyName());
+					companyTwoLabel.setFont(new Font("Serif",Font.BOLD,22));
+					companyTwoLabel.setForeground(Color.blue);
+					
+					gbc.fill = GridBagConstraints.BOTH;
+					gbc.weightx = 1;
+					gbc.weighty = 1;
+					gbc.gridx = 0;
+					gbc.gridy = 2;
+			        
+			        resultsPanel.add(companyTwoLabel,gbc);
+			        
+			        jobURL2.setText(sortedJobs.get(1).getURL());
+			        
+			        jobURL2.setBorderPainted(false);
+			        jobURL2.setOpaque(false);
+			        jobURL2.setBackground(Color.WHITE);
+			        jobURL2.setFont(new Font("Serif",Font.ITALIC,18));
+			        jobURL2.setForeground(Color.blue);
+			        
+					gbc.fill = GridBagConstraints.NONE;
+					gbc.weightx = 1;
+					gbc.weighty = 1;
+					gbc.gridx = 1;
+					gbc.gridy = 2;
+					
+					resultsPanel.add(jobURL2,gbc);
+					
+					JTextArea jobDesc2 = new JTextArea(sortedJobs.get(1).getJobDescription());
+					jobDesc2.setLineWrap(true);
+					jobDesc2.setEditable(false);
+					JScrollPane scroll2 = new JScrollPane(jobDesc2);
+					scroll2.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+					scroll2.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+					
+					
+					gbc.fill = GridBagConstraints.BOTH;
+					gbc.weightx = 3;
+					gbc.weighty = 3;
+					gbc.gridx = 0;
+					gbc.gridy = 3;	 
+					gbc.gridwidth = 2;
+					
+					resultsPanel.add(scroll2,gbc);
+					
+					JLabel companyThreeLabel = new JLabel("3. " + sortedJobs.get(2).getCompanyName());
+					companyThreeLabel.setFont(new Font("Serif",Font.BOLD,22));
+					companyThreeLabel.setForeground(Color.BLACK);
+					
+					gbc.fill = GridBagConstraints.BOTH;
+					gbc.weightx = 1;
+					gbc.weighty = 1;
+					gbc.gridx = 0;
+					gbc.gridy = 4;
+			        
+			        resultsPanel.add(companyThreeLabel,gbc);
+			        
+			        jobURL3.setText(sortedJobs.get(2).getURL());
+			        
+			        jobURL3.setBorderPainted(false);
+			        jobURL3.setOpaque(false);
+			        jobURL3.setBackground(Color.WHITE);
+			        jobURL3.setFont(new Font("Serif",Font.ITALIC,18));
+			        jobURL3.setForeground(Color.blue);
+			        
+					gbc.fill = GridBagConstraints.NONE;
+					gbc.weightx = 1;
+					gbc.weighty = 1;
+					gbc.gridx = 1;
+					gbc.gridy = 4;
+					
+					resultsPanel.add(jobURL3,gbc);
+					
+					JTextArea jobDesc3 = new JTextArea(sortedJobs.get(2).getJobDescription());
+					jobDesc3.setLineWrap(true);
+					jobDesc2.setEditable(false);
+					JScrollPane scroll3 = new JScrollPane(jobDesc3);
+					scroll3.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+					scroll3.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+					
+					
+					gbc.fill = GridBagConstraints.BOTH;
+					gbc.weightx = 3;
+					gbc.weighty = 3;
+					gbc.gridx = 0;
+					gbc.gridy = 5;	 
+					gbc.gridwidth = 2;
+					
+					resultsPanel.add(scroll3,gbc);
+							        
+			        
+			        backToResumePanelButton = new JButton("< Back");
+			        backToResumePanelButton.addActionListener(this);
+			        
+					
+					gbc.fill = GridBagConstraints.NONE;
+					gbc.weightx = 1;
+					gbc.weighty = 1;
+					gbc.gridx = 1;
+					gbc.gridy = 6;	 
+					gbc.gridwidth = 1;
+
+			        resultsPanel.add(backToResumePanelButton,gbc);
+					
+					
+			        resumeStatus.setText( "*Resume Updated*");
+					
+					CardLayout cl = (CardLayout) (cards.getLayout());
+					cl.show(cards, MESSAGEPANEL);
+				}
+				else {
+//					JFrame frame = new JFrame();
+					System.out.println("No File selected...");
+					JOptionPane.showMessageDialog(null, "No File Selected.");
+					CardLayout cl = (CardLayout) (cards.getLayout());
+					cl.show(cards, RESUMEPANEL);
+				}
+			}
+			if(e.getSource().equals(jobURL1))
+			{
+			     try {
+					Desktop.getDesktop().browse(java.net.URI.create(sortedJobs.get(0).getURL()));
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+			}
+			if(e.getSource().equals(jobURL2))
+			{
+			     try {
+					Desktop.getDesktop().browse(java.net.URI.create(sortedJobs.get(1).getURL()));
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+			}
+			if(e.getSource().equals(jobURL3))
+			{
+			     try {
+					Desktop.getDesktop().browse(java.net.URI.create(sortedJobs.get(2).getURL()));
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+			}
+			if(e.getSource().equals(backToResumePanelButton)){
+				CardLayout cl = (CardLayout) (cards.getLayout());
+				cl.show(cards, MESSAGEPANEL);
+			}
+			if(e.getSource().equals(submit)){//information panel submit button
+				
+				currentUser1 = new user();//Initialize user object here because this is the first stage in the application process
+				
+				//I DONT THINK THESE VARIABLES NEED GLOBAL SCOPE!!!!!!!!!!!!!
+				 this.first = firstName.getText();
+				 this.middle = middleName.getText();
+				 this.last = lastName.getText();
+				 this.fullName = this.first + this.middle + this.last;
+				 this.day = (String) dayDOB.getSelectedItem();
+				 this.month = (String) monthDOB.getSelectedItem();
+				 this.year =  (String) yearDOB.getSelectedItem();
+				 this.DOB = this.day + this.month + this.year;
+				 this.email = emailField.getText();
+				 this.phoneNumber = phoneNumberField.getText();
+				 
+				 currentUser1.setFullName(first+ " " + middle + " " + last);
+				 
+				 infoStatus.setText("*Information Updated*");
+				 
+				CardLayout cl = (CardLayout) (cards.getLayout());
+				cl.show(cards, MESSAGEPANEL);
+			}
+			if(e.getSource().equals(backToInfoButton)){
+				CardLayout cl = (CardLayout)(cards.getLayout());
+				cl.show(cards, MESSAGEPANEL);
+			}
+			if(e.getSource().equals(clearInfoButton)){
+				firstName.setText("");
+				middleName.setText("");
+				lastName.setText("");
+				emailField.setText("");
+				phoneNumberField.setText("");
+//				CardLayout cl = (CardLayout)(cards.getLayout());
+//				cl.show(cards, INFOPANEL);
+			}
+			if(e.getSource().equals(returnRecovery))
+			{
+				CardLayout cl = (CardLayout) (cards.getLayout());
+				cl.show(cards, LOGINPANEL);	
+			}
+			if(e.getSource().equals(submitRecovery))
+			{
+				if(recoveryTest < 5)
+				{
+					String username = recoveryUserName.getText();
+					String maidenName =  recoveryQuestionAnswer.getText();
+					for(int i = 0; i < user.numOfUsers; i++)
+						if(username.equals(USERS[i].username) && maidenName.equals(USERS[i].mothersMaidenName))
+							recoveredPassword.setText(USERS[i].password);
+
+				}
+			}
+			if(e.getSource().equals(forgotPassword))
+			{
+				if(recoveryTest < 5)
+				{
+					CardLayout cl = (CardLayout) (cards.getLayout());
+					cl.show(cards, RECOVERY);	
+					recoveryTest++;
+			}
+				
+		}
+	
+			if(e.getSource().equals(infoBack))
+			{
+				CardLayout cl = (CardLayout) (cards.getLayout());
+				cl.show(cards, MESSAGEPANEL);
+			}
+			
+			if(e.getSource().equals(newAccBack))
+			{
+				CardLayout cl = (CardLayout) (cards.getLayout());
+				cl.show(cards, LOGINPANEL);
+			}
 		
 	}
 }
+
+
+

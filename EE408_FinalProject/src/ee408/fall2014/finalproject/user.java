@@ -3,20 +3,51 @@ package ee408.fall2014.finalproject;
 import java.util.HashSet;
 import java.util.Set;
 
-public class User {
 
+
+public class user {
+
+	public static int numOfUsers = 0;
+	String username;
+	String password;
+	String firstname;
+	String lastname;
+	String mothersMaidenName;
 	private String fullName;
 	private String areaOfInterest;
 	private boolean wantFullTime;
 	private Set<String> keywords;
+	boolean active= false;
 	private String levelOfEducation;
-	
-	public User() {
+	user()
+	{
+		username=null;
+		password=null;
+		mothersMaidenName = null;
+		active = true;
+		numOfUsers++;
 		this.fullName = null;
 		this.areaOfInterest = null;
 		this.wantFullTime = false;
 		this.levelOfEducation = null;
 		keywords = new HashSet<String>();
+	}
+	user(String u, String p, String m)
+	{
+		username=u;
+		password=p;
+		mothersMaidenName = m;
+		active = true;
+		numOfUsers++;
+		this.fullName = null;
+		this.areaOfInterest = null;
+		this.wantFullTime = false;
+		this.levelOfEducation = null;
+		keywords = new HashSet<String>();
+	}
+	public void setName(String first, String last)
+	{
+		firstname = first; lastname = last;	
 	}
 	public String getFullName(){
 		return fullName;
@@ -62,6 +93,12 @@ public class User {
 		tfp.printSet(keywords);
 		System.out.println("**************************END USER OBJECT INFORMATION******************");
 	}
-	
-
 }
+
+
+
+
+
+
+
+
