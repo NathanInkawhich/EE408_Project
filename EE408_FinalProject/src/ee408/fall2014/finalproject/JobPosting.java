@@ -1,6 +1,5 @@
 package ee408.fall2014.finalproject;
 
-import java.net.URI;
 import java.util.*;
 
 public class JobPosting {
@@ -10,7 +9,7 @@ public class JobPosting {
 	private boolean fullTime;
 	private String jobType;//Health care, engineering, etc...
 	private Set<String> keywords;
-	private String jobURL;
+	private  String jobURL;
 	
 	public JobPosting(String companyName, String jobDescription, boolean fullTime, String jobType, Set<String> keys,String URL){
 		
@@ -18,8 +17,8 @@ public class JobPosting {
 		this.jobDescription = jobDescription;
 		this.fullTime = fullTime;
 		this.jobType = jobType;
-		keywords = new HashSet<String>(keys);
 		this.jobURL = URL;
+		keywords = new HashSet<String>(keys);
 	
 	}
 	public void addKeywords(Set<String> keys){
@@ -40,9 +39,6 @@ public class JobPosting {
 	public String getJobType(){
 		return this.jobType;
 	}
-	public void setURL(String URL){
-		this.jobURL = URL;
-	}
 	public String getURL(){
 		return this.jobURL;
 	}
@@ -54,9 +50,8 @@ public class JobPosting {
 		String [] jobDescriptions = {"We work on computers","We give people rides","We cut grass"};
 		boolean [] jobTimes = {true,true,false};
 		String [] jobTypes = {"Engineering", "Business", "Manual Labor"};
-		String [] jobURL = {"http://google.com","",""};
-		//String []
 		ArrayList<Set<String>> keywordList = new ArrayList<Set<String>>();
+		String [] jobURL = {};
 		
 		HashSet<String> IBMKeys = new HashSet<String>();
 		IBMKeys.add("computers");
@@ -70,7 +65,7 @@ public class JobPosting {
 		EmersonKeys.add("trees");
 		EmersonKeys.add("grass");
 		EmersonKeys.add("lawnmowers");
-				
+		
 		keywordList.add(IBMKeys);
 		keywordList.add(BirnieKeys);
 		keywordList.add(EmersonKeys);
