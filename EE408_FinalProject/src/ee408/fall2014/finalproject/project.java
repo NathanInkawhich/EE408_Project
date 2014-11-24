@@ -91,8 +91,8 @@ public class project extends JFrame implements ActionListener {
     		String mtext = new String();
     		if(authenticate)
     		{
-    		  mtext="Dear "+firstname+" "+lastname+",\n"; 
-    		  mtext+=  " Welcome!";
+    		  mtext="Welcome "+firstname+" "+lastname+",\n"; 
+
     		}
     		
     		return mtext;
@@ -260,7 +260,6 @@ labelpane.add(topLabel);
 	gbc2.gridwidth = 2;
 	gbc2.weighty = 2;
 
-	gbc2.anchor = GridBagConstraints.EAST;
 	
 	card1.add(message,gbc2);
 	
@@ -1107,8 +1106,12 @@ labelpane.add(topLabel);
 		}
 		if(e.getSource().equals(editResume))
 		{
-			CardLayout cl = (CardLayout) (cards.getLayout());
-			cl.show(cards,RESUMEPANEL);
+			if(infoStatus.getText().equals("*Information Updated*")){
+				CardLayout cl = (CardLayout) (cards.getLayout());
+				cl.show(cards,RESUMEPANEL);
+			}
+			else
+				JOptionPane.showMessageDialog(null, "Please submit your person information first.");
 		}
 		if (e.getSource().equals(browseResumeButton)) {
 			FileFilter filter = new FileNameExtensionFilter("TextFile", "txt");
